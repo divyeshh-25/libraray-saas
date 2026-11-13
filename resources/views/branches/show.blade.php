@@ -2,44 +2,47 @@
 @section('title', 'Branch details')
 @section('content')
 @php
-    use App\Support\Mock;
-    $b = Mock::branch((int) $id);
-    $halls = collect(Mock::halls())->take(4);
-    $occ = round($b['students'] / $b['seats'] * 100);
+    $hours = $branch->opens_at && $branch->closes_at
+        ? \Carbon\Carbon::parse($branch->opens_at)->format('g:i A').' – '.\Carbon\Carbon::parse($branch->closes_at)->format('g:i A')
+        : '—';
 @endphp
-<x-page-header :title="$b['name']" :subtitle="$b['tenant'].' · '.$b['code']" :back="['Branches', route('branches.index')]">
-    <a href="{{ route('branches.edit', $b['id']) }}" class="btn btn-primary">Edit branch</a>
+<x-page-header :title="$branch->name" :subtitle="$branch->tenant?->library_name.' · '.$branch->code" :back="['Branches', route('branches.index')]">
+    @if ($branch->trashed())
+        <span class="badge badge-muted">Archived</span>
+        <button type="button" class="btn btn-primary" data-restore-url="{{ route('branches.restore', $branch->id) }}" data-redirect="{{ route('branches.index') }}"><x-icon name="restore" class="w-4 h-4" /> Restore</button>
+    @else
+        <a href="{{ route('branches.edit', $branch->id) }}" class="btn btn-primary">Edit branch</a>
+    @endif
 </x-page-header>
 
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-    <x-stat label="Halls" :value="$b['halls']" />
-    <x-stat label="Total seats" :value="$b['seats']" />
-    <x-stat label="Students enrolled" :value="$b['students']" />
-    <x-stat label="Occupancy" :value="$occ.'%'" />
+    <x-stat label="Halls" :value="$halls->count()" />
+    <x-stat label="Total seats" :value="$seatsCount" />
+    <x-stat label="Students enrolled" :value="$branch->students_count" />
+    <x-stat label="Occupancy" :value="$occupancy.'%'" />
 </div>
 
 <div class="grid lg:grid-cols-3 gap-4 mt-4">
     <div class="card lg:col-span-2">
         <div class="card-head"><div class="card-title">Halls in this branch</div><a href="{{ route('halls.create') }}" class="btn btn-sm">Add hall</a></div>
         <table class="tbl">
-            <thead><tr><th>Hall</th><th class="text-right">Seats</th><th class="w-48">Occupancy</th><th>Status</th></tr></thead>
+            <thead><tr><th>Hall</th><th>Status</th></tr></thead>
             <tbody>
-                @foreach ($halls as $h)
-                    @php $p = round($h['occupied'] / $h['seats'] * 100); @endphp
+                @forelse ($halls as $h)
                     <tr>
-                        <td><a href="{{ route('halls.show', $h['id']) }}" class="font-medium hover:text-brand-700">{{ $h['name'] }}</a></td>
-                        <td class="text-right">{{ $h['seats'] }}</td>
-                        <td><div class="flex items-center gap-2"><div class="h-1.5 flex-1 bg-slate-100 rounded-full"><div class="h-full bg-brand-600 rounded-full" style="width: {{ $p }}%"></div></div><span class="text-[12px] text-muted w-8">{{ $p }}%</span></div></td>
-                        <td><x-badge :status="$h['status']" /></td>
+                        <td class="font-medium">{{ $h->name }}</td>
+                        <td><x-badge :status="$h->status" /></td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr><td colspan="2" class="text-center text-muted py-6">No halls yet.</td></tr>
+                @endforelse
             </tbody>
         </table>
     </div>
     <div class="card">
-        <div class="card-head"><div class="card-title">Contact</div><x-badge :status="$b['status']" /></div>
+        <div class="card-head"><div class="card-title">Contact</div><x-badge :status="$branch->status" /></div>
         <dl class="p-5 space-y-3 text-[13px]">
-            @foreach ([['Library', $b['tenant']], ['City', $b['city']], ['Phone', $b['phone']], ['Hours', '6:00 AM – 11:00 PM'], ['Manager', 'Ritesh Parmar']] as [$k, $v])
+            @foreach ([['Library', $branch->tenant?->library_name], ['City', $branch->city], ['Phone', $branch->phone], ['Hours', $hours], ['Weekly off', $branch->weekly_off ?? 'None']] as [$k, $v])
                 <div class="flex justify-between gap-4"><dt class="text-muted">{{ $k }}</dt><dd class="text-right font-medium">{{ $v }}</dd></div>
             @endforeach
         </dl>

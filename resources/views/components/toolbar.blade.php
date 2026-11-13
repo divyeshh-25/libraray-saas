@@ -6,7 +6,7 @@
         <input class="input !pl-9" placeholder="{{ $placeholder }}" data-table-search="{{ $target }}">
     </div>
     @foreach ($filters as $label => $f)
-        <select class="input !w-auto" data-table-filter="{{ $target }}" data-col="{{ $f['col'] }}">
+        <select class="input !w-auto select2" data-table-filter="{{ $target }}" data-col="{{ $f['col'] }}" data-placeholder="{{ $label }}">
             <option value="">{{ $label }}</option>
             @foreach ($f['options'] as $o)<option>{{ $o }}</option>@endforeach
         </select>

@@ -5,6 +5,11 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\BranchController;
+use App\Http\Controllers\HallController;
+use App\Http\Controllers\PlanController;
+use App\Http\Controllers\StaffController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TenantController;
 use Illuminate\Support\Facades\Route;
 
@@ -48,17 +53,59 @@ Route::middleware('auth:web,admin')->group(function () {
     Route::put('/tenants/{id}', [TenantController::class, 'update'])->whereNumber('id')->name('tenants.update');
     Route::delete('/tenants/{id}', [TenantController::class, 'destroy'])->whereNumber('id')->name('tenants.destroy');
 
-    $resources = ['plans', 'branches', 'halls', 'staff', 'students'];
+    // Plans: dynamic (database-backed via PlanController).
+    Route::get('/plans', [PlanController::class, 'index'])->name('plans.index');
+    Route::get('/plans/create', [PlanController::class, 'create'])->name('plans.create');
+    Route::post('/plans', [PlanController::class, 'store'])->name('plans.store');
+    Route::get('/plans/archived', [PlanController::class, 'archived'])->name('plans.archived');
+    Route::post('/plans/{id}/restore', [PlanController::class, 'restore'])->whereNumber('id')->name('plans.restore');
+    Route::get('/plans/{id}', [PlanController::class, 'show'])->whereNumber('id')->name('plans.show');
+    Route::get('/plans/{id}/edit', [PlanController::class, 'edit'])->whereNumber('id')->name('plans.edit');
+    Route::put('/plans/{id}', [PlanController::class, 'update'])->whereNumber('id')->name('plans.update');
+    Route::delete('/plans/{id}', [PlanController::class, 'destroy'])->whereNumber('id')->name('plans.destroy');
 
-    foreach ($resources as $name) {
-        Route::view("/{$name}", "{$name}.index")->name("{$name}.index");
-        Route::view("/{$name}/create", "{$name}.form", ['mode' => 'create'])->name("{$name}.create");
-        Route::view("/{$name}/{id}/edit", "{$name}.form", ['mode' => 'edit'])->whereNumber('id')->name("{$name}.edit");
+    // Branches: dynamic (database-backed via BranchController).
+    Route::get('/branches', [BranchController::class, 'index'])->name('branches.index');
+    Route::get('/branches/create', [BranchController::class, 'create'])->name('branches.create');
+    Route::post('/branches', [BranchController::class, 'store'])->name('branches.store');
+    Route::get('/branches/archived', [BranchController::class, 'archived'])->name('branches.archived');
+    Route::post('/branches/{id}/restore', [BranchController::class, 'restore'])->whereNumber('id')->name('branches.restore');
+    Route::get('/branches/{id}', [BranchController::class, 'show'])->whereNumber('id')->name('branches.show');
+    Route::get('/branches/{id}/edit', [BranchController::class, 'edit'])->whereNumber('id')->name('branches.edit');
+    Route::put('/branches/{id}', [BranchController::class, 'update'])->whereNumber('id')->name('branches.update');
+    Route::delete('/branches/{id}', [BranchController::class, 'destroy'])->whereNumber('id')->name('branches.destroy');
 
-        if (in_array($name, ['branches', 'halls', 'students'])) {
-            Route::view("/{$name}/{id}", "{$name}.show")->whereNumber('id')->name("{$name}.show");
-        }
-    }
+    // Halls: dynamic (database-backed via HallController).
+    Route::get('/halls', [HallController::class, 'index'])->name('halls.index');
+    Route::get('/halls/create', [HallController::class, 'create'])->name('halls.create');
+    Route::post('/halls', [HallController::class, 'store'])->name('halls.store');
+    Route::get('/halls/archived', [HallController::class, 'archived'])->name('halls.archived');
+    Route::post('/halls/{id}/restore', [HallController::class, 'restore'])->whereNumber('id')->name('halls.restore');
+    Route::get('/halls/{id}', [HallController::class, 'show'])->whereNumber('id')->name('halls.show');
+    Route::get('/halls/{id}/edit', [HallController::class, 'edit'])->whereNumber('id')->name('halls.edit');
+    Route::put('/halls/{id}', [HallController::class, 'update'])->whereNumber('id')->name('halls.update');
+    Route::delete('/halls/{id}', [HallController::class, 'destroy'])->whereNumber('id')->name('halls.destroy');
+
+    // Staff: dynamic (database-backed via StaffController).
+    Route::get('/staff', [StaffController::class, 'index'])->name('staff.index');
+    Route::get('/staff/create', [StaffController::class, 'create'])->name('staff.create');
+    Route::post('/staff', [StaffController::class, 'store'])->name('staff.store');
+    Route::get('/staff/archived', [StaffController::class, 'archived'])->name('staff.archived');
+    Route::post('/staff/{id}/restore', [StaffController::class, 'restore'])->whereNumber('id')->name('staff.restore');
+    Route::get('/staff/{id}/edit', [StaffController::class, 'edit'])->whereNumber('id')->name('staff.edit');
+    Route::put('/staff/{id}', [StaffController::class, 'update'])->whereNumber('id')->name('staff.update');
+    Route::delete('/staff/{id}', [StaffController::class, 'destroy'])->whereNumber('id')->name('staff.destroy');
+
+    // Students: dynamic (database-backed via StudentController).
+    Route::get('/students', [StudentController::class, 'index'])->name('students.index');
+    Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
+    Route::post('/students', [StudentController::class, 'store'])->name('students.store');
+    Route::get('/students/archived', [StudentController::class, 'archived'])->name('students.archived');
+    Route::post('/students/{id}/restore', [StudentController::class, 'restore'])->whereNumber('id')->name('students.restore');
+    Route::get('/students/{id}', [StudentController::class, 'show'])->whereNumber('id')->name('students.show');
+    Route::get('/students/{id}/edit', [StudentController::class, 'edit'])->whereNumber('id')->name('students.edit');
+    Route::put('/students/{id}', [StudentController::class, 'update'])->whereNumber('id')->name('students.update');
+    Route::delete('/students/{id}', [StudentController::class, 'destroy'])->whereNumber('id')->name('students.destroy');
 
     Route::prefix('settings')->name('settings.')->group(function () {
         Route::redirect('/', '/settings/fee-structure');

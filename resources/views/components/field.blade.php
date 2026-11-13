@@ -3,7 +3,8 @@
 <div class="{{ $span }}">
     <label class="label" for="{{ $name }}">{{ $label }}@if ($required)<span class="text-red-600"> *</span>@endif</label>
     @if ($options !== null)
-        <select id="{{ $name }}" name="{{ $name }}" class="input" @if ($required) required @endif>
+        <select id="{{ $name }}" name="{{ $name }}" class="input select2" data-placeholder="Select {{ $label }}" @if ($required) required @endif>
+            <option value="" disabled @selected(!$value)>Select {{ $label }}</option>
             @foreach ($options as $o)
                 <option @selected($o == $value)>{{ $o }}</option>
             @endforeach

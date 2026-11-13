@@ -1,8 +1,31 @@
 // Frontend-only interactions for the static admin UI. No network calls.
+// jQuery + Select2 are loaded from a CDN (see layouts/app.blade.php), not npm.
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+/* ---------- Select2 (searchable dropdowns with a "Select <field>" placeholder) ---------- */
+const measureCtx = document.createElement('canvas').getContext('2d');
+const widestOptionWidth = (select) => {
+    measureCtx.font = window.getComputedStyle(select).font || '13px sans-serif';
+    const widths = [...select.options].map((o) => measureCtx.measureText(o.text).width);
+    return Math.max(...widths, 0) + 48; // + horizontal padding and the dropdown arrow
+};
+
+if (window.jQuery && window.jQuery.fn.select2) {
+    window.jQuery(() => {
+        window.jQuery('select[data-placeholder]').each(function () {
+            const isFilter = this.hasAttribute('data-table-filter');
+            window.jQuery(this).select2({
+                width: isFilter ? `${widestOptionWidth(this)}px` : '100%',
+                placeholder: window.jQuery(this).data('placeholder'),
+                allowClear: isFilter,
+                minimumResultsForSearch: 2,
+            });
+        });
+    });
+}
 
 /* ---------- Sidebar (mobile) + collapsible groups ---------- */
 const sidebar = $('#sidebar');
