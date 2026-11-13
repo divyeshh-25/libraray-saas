@@ -1,0 +1,65 @@
+- generic [ref=f13e2]:
+  - generic [ref=f13e3]:
+    - generic [ref=f13e4]:
+      - generic [ref=f13e5]: W
+      - generic [ref=f13e6]: LMS
+    - generic [ref=f13e7]:
+      - heading "Run every library branch from one place." [level=2] [ref=f13e8]
+      - paragraph [ref=f13e9]: Admissions, seat allocation, fee collection and attendance for study libraries and reading halls.
+      - generic [ref=f13e10]:
+        - generic [ref=f13e11]:
+          - term [ref=f13e12]: Libraries
+          - definition [ref=f13e13]: "148"
+        - generic [ref=f13e14]:
+          - term [ref=f13e15]: Students
+          - definition [ref=f13e16]: 12,480
+        - generic [ref=f13e17]:
+          - term [ref=f13e18]: Branches
+          - definition [ref=f13e19]: "213"
+    - paragraph [ref=f13e20]: © 2026 DivyeshCodes
+  - generic [ref=f13e22]:
+    - heading "Create your account" [level=1] [ref=f13e23]
+    - paragraph [ref=f13e24]: Start a 14-day free trial. No card required.
+    - generic [ref=f13e25]:
+      - generic [ref=f13e26]:
+        - generic [ref=f13e27]: Full name
+        - textbox "Full name" [ref=f13e28]:
+          - /placeholder: Anand Verma
+      - generic [ref=f13e29]:
+        - generic [ref=f13e30]: Library name
+        - textbox "Library name" [ref=f13e31]:
+          - /placeholder: Gyan Deep Library
+      - generic [ref=f13e32]:
+        - generic [ref=f13e33]:
+          - generic [ref=f13e34]: Email
+          - textbox "Email" [ref=f13e35]:
+            - /placeholder: ""
+        - generic [ref=f13e36]:
+          - generic [ref=f13e37]: Phone
+          - textbox "Phone" [ref=f13e38]:
+            - /placeholder: ""
+      - generic [ref=f13e39]:
+        - generic [ref=f13e40]: Password
+        - generic [ref=f13e41]:
+          - textbox "Password" [ref=f13e42]
+          - button "Show" [ref=f13e43] [cursor=pointer]
+      - generic [ref=f13e44]:
+        - generic [ref=f13e45]: Confirm password
+        - generic [ref=f13e46]:
+          - textbox "Confirm password" [ref=f13e47]
+          - button "Show" [ref=f13e48] [cursor=pointer]
+      - generic [ref=f13e49] [cursor=pointer]:
+        - checkbox "I agree to the Terms and Privacy Policy." [ref=f13e50]
+        - generic [ref=f13e51]:
+          - text: I agree to the
+          - link "Terms" [ref=f13e52]:
+            - /url: "#"
+          - text: and
+          - link "Privacy Policy" [ref=f13e53]:
+            - /url: "#"
+          - text: .
+      - button "Create account" [ref=f13e54] [cursor=pointer]
+    - paragraph [ref=f13e55]:
+      - text: Already registered?
+      - link "Sign in" [ref=f13e56] [cursor=pointer]:
+        - /url: http://localhost:8765/login

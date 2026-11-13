@@ -1,0 +1,230 @@
+- generic [ref=f11e2]:
+  - complementary [ref=f11e3]:
+    - generic [ref=f11e4]:
+      - generic [ref=f11e5]: W
+      - generic [ref=f11e6]: LMS
+    - navigation [ref=f11e7]:
+      - link "Dashboard" [ref=f11e8] [cursor=pointer]:
+        - /url: /dashboard
+      - link "Tenants" [ref=f11e14] [cursor=pointer]:
+        - /url: /tenants
+      - link "Plans" [ref=f11e17] [cursor=pointer]:
+        - /url: /plans
+      - link "Branches" [ref=f11e21] [cursor=pointer]:
+        - /url: /branches
+      - link "Halls" [ref=f11e25] [cursor=pointer]:
+        - /url: /halls
+      - link "Staff" [ref=f11e31] [cursor=pointer]:
+        - /url: /staff
+      - link "Students" [ref=f11e35] [cursor=pointer]:
+        - /url: /students
+      - generic [ref=f11e39]:
+        - button "Settings" [ref=f11e40] [cursor=pointer]
+        - generic [ref=f11e46]:
+          - generic:
+            - link "Fee Structure" [ref=f11e47] [cursor=pointer]:
+              - /url: /settings/fee-structure
+            - link "General Settings" [ref=f11e48] [cursor=pointer]:
+              - /url: /settings/general
+            - link "Roles & Permissions" [ref=f11e49] [cursor=pointer]:
+              - /url: /settings/roles
+    - button "DP Divyesh Panchal Super Admin" [ref=f11e51] [cursor=pointer]:
+      - generic [ref=f11e52]: DP
+      - generic [ref=f11e53]:
+        - generic [ref=f11e54]: Divyesh Panchal
+        - generic [ref=f11e55]: Super Admin
+  - generic [ref=f11e58]:
+    - banner [ref=f11e59]:
+      - textbox "Search tenants, students, branches…" [ref=f11e64]
+      - generic [ref=f11e65]:
+        - generic [ref=f11e66]: Fri, 13 Nov 2026
+        - button "Notifications" [ref=f11e68] [cursor=pointer]
+    - main [ref=f11e72]:
+      - generic [ref=f11e73]:
+        - generic [ref=f11e74]:
+          - generic [ref=f11e75]: Live overview · November 2026
+          - heading "Good morning, Divyesh 👋" [level=1] [ref=f11e77]
+          - paragraph [ref=f11e78]: 3 subscriptions need attention today. Everything else looks healthy.
+        - generic [ref=f11e79]:
+          - link "New admission" [ref=f11e80] [cursor=pointer]:
+            - /url: /students/create
+          - link "Add branch" [ref=f11e81] [cursor=pointer]:
+            - /url: /branches/create
+          - link "Add tenant" [ref=f11e82] [cursor=pointer]:
+            - /url: /tenants/create
+      - generic [ref=f11e85]:
+        - generic [ref=f11e86]:
+          - generic [ref=f11e87]: Active tenants
+          - generic [ref=f11e92]:
+            - generic [ref=f11e93]: "121"
+            - generic [ref=f11e94]: "6"
+          - generic [ref=f11e97]: 12 on trial
+        - generic [ref=f11e98]:
+          - generic [ref=f11e99]: Registered students
+          - generic [ref=f11e105]:
+            - generic [ref=f11e106]: 10,044
+            - generic [ref=f11e107]: 4.1%
+          - generic [ref=f11e110]: across 213 branches
+        - generic [ref=f11e111]:
+          - generic [ref=f11e112]: Monthly revenue
+          - generic [ref=f11e118]:
+            - generic [ref=f11e119]: ₹5.21 L
+            - generic [ref=f11e120]: 5.9%
+          - generic [ref=f11e123]: vs ₹6.12 L in October
+        - generic [ref=f11e124]:
+          - generic [ref=f11e125]: Seat occupancy
+          - generic [ref=f11e133]:
+            - generic [ref=f11e134]: 57%
+            - generic [ref=f11e135]: 1.2%
+          - generic [ref=f11e138]: 21,340 of 30,060 seats
+      - generic [ref=f11e139]:
+        - generic [ref=f11e140]:
+          - generic [ref=f11e141]:
+            - generic [ref=f11e142]: Subscription revenue (₹ thousands)
+            - generic [ref=f11e143]: Last 12 months
+          - img [ref=f11e145]:
+            - 'generic "Dec: 412" [ref=f11e146]'
+            - generic [ref=f11e147]: Dec
+            - 'generic "Jan: 436" [ref=f11e148]'
+            - generic [ref=f11e149]: Jan
+            - 'generic "Feb: 451" [ref=f11e150]'
+            - generic [ref=f11e151]: Feb
+            - 'generic "Mar: 449" [ref=f11e152]'
+            - generic [ref=f11e153]: Mar
+            - 'generic "Apr: 478" [ref=f11e154]'
+            - generic [ref=f11e155]: Apr
+            - 'generic "May: 502" [ref=f11e156]'
+            - generic [ref=f11e157]: May
+            - 'generic "Jun: 515" [ref=f11e158]'
+            - generic [ref=f11e159]: Jun
+            - 'generic "Jul: 540" [ref=f11e160]'
+            - generic [ref=f11e161]: Jul
+            - 'generic "Aug: 561"'
+            - generic [ref=f11e162]: Aug
+            - 'generic "Sep: 588"'
+            - generic [ref=f11e163]: Sep
+            - 'generic "Oct: 612"'
+            - generic [ref=f11e164]: Oct
+            - 'generic "Nov: 648"'
+            - generic [ref=f11e165]: Nov
+        - generic [ref=f11e166]:
+          - generic [ref=f11e167]: Tenants by plan
+          - generic [ref=f11e169]:
+            - list [ref=f11e174]:
+              - listitem [ref=f11e175]:
+                - generic [ref=f11e177]: Starter
+                - generic [ref=f11e178]: 38 tenants
+                - generic [ref=f11e179]: 48%
+              - listitem [ref=f11e180]:
+                - generic [ref=f11e182]: Growth
+                - generic [ref=f11e183]: 31 tenants
+                - generic [ref=f11e184]: 39%
+              - listitem [ref=f11e185]:
+                - generic [ref=f11e187]: Pro
+                - generic [ref=f11e188]: 11 tenants
+                - generic [ref=f11e189]: 14%
+            - generic [ref=f11e190]: "Average revenue per tenant: ₹4,380"
+      - generic [ref=f11e191]:
+        - generic [ref=f11e192]:
+          - generic [ref=f11e193]:
+            - generic [ref=f11e194]: Student growth
+            - generic [ref=f11e195]: 12,480 total
+          - img [ref=f11e197]:
+            - 'generic "Dec: 7,420" [ref=f11e200]'
+            - generic [ref=f11e201]: Dec
+            - 'generic "Jan: 7,890" [ref=f11e202]'
+            - 'generic "Feb: 8,310" [ref=f11e203]'
+            - generic [ref=f11e204]: Feb
+            - 'generic "Mar: 8,620" [ref=f11e205]'
+            - 'generic "Apr: 9,040" [ref=f11e206]'
+            - generic [ref=f11e207]: Apr
+            - 'generic "May: 9,480" [ref=f11e208]'
+            - 'generic "Jun: 9,910" [ref=f11e209]'
+            - generic [ref=f11e210]: Jun
+            - 'generic "Jul: 10,420" [ref=f11e211]'
+            - 'generic "Aug: 10,980" [ref=f11e212]'
+            - generic [ref=f11e213]: Aug
+            - 'generic "Sep: 11,540" [ref=f11e214]'
+            - 'generic "Oct: 12,010" [ref=f11e215]'
+            - generic [ref=f11e216]: Oct
+            - 'generic "Nov: 12,480" [ref=f11e217]'
+            - generic [ref=f11e218]: Nov
+        - generic [ref=f11e219]:
+          - generic [ref=f11e220]:
+            - generic [ref=f11e221]: Subscriptions needing attention
+            - link "View all tenants" [ref=f11e222] [cursor=pointer]:
+              - /url: /tenants
+          - table [ref=f11e224]:
+            - rowgroup [ref=f11e225]:
+              - row [ref=f11e226]:
+                - columnheader "Library" [ref=f11e227]
+                - columnheader "Plan" [ref=f11e228]
+                - columnheader "Status" [ref=f11e229]
+                - columnheader "Detail" [ref=f11e230]
+            - rowgroup [ref=f11e231]:
+              - row [ref=f11e232]:
+                - cell "Lakshya Reading Hall Rina Kapadia" [ref=f11e233]:
+                  - generic [ref=f11e234]: Lakshya Reading Hall
+                  - generic [ref=f11e235]: Rina Kapadia
+                - cell "Starter" [ref=f11e236]
+                - cell "Expired" [ref=f11e237]
+                - cell "Expired 2 days ago" [ref=f11e239]
+              - row [ref=f11e240]:
+                - cell "Pustak Reading Lounge Kavita Joshi" [ref=f11e241]:
+                  - generic [ref=f11e242]: Pustak Reading Lounge
+                  - generic [ref=f11e243]: Kavita Joshi
+                - cell "Growth" [ref=f11e244]
+                - cell "Trial" [ref=f11e245]
+                - cell "Trial ends in 3 days" [ref=f11e247]
+              - row [ref=f11e248]:
+                - cell "Aspire Study Center Pooja Rana" [ref=f11e249]:
+                  - generic [ref=f11e250]: Aspire Study Center
+                  - generic [ref=f11e251]: Pooja Rana
+                - cell "Starter" [ref=f11e252]
+                - cell "Trial" [ref=f11e253]
+                - cell "Trial ends in 9 days" [ref=f11e255]
+              - row [ref=f11e256]:
+                - cell "Knowledge Point Harsh Mehta" [ref=f11e257]:
+                  - generic [ref=f11e258]: Knowledge Point
+                  - generic [ref=f11e259]: Harsh Mehta
+                - cell "Growth" [ref=f11e260]
+                - cell "Active" [ref=f11e261]
+                - cell "Renews in 12 days" [ref=f11e263]
+      - generic [ref=f11e264]:
+        - generic [ref=f11e265]: Recent activity
+        - list [ref=f11e267]:
+          - listitem [ref=f11e268]:
+            - generic [ref=f11e270]:
+              - generic [ref=f11e271]: Rina Kapadia’s plan expired
+              - generic [ref=f11e272]: Lakshya Reading Hall · Starter
+            - generic [ref=f11e273]: 12 min ago
+          - listitem [ref=f11e274]:
+            - generic [ref=f11e276]:
+              - generic [ref=f11e277]: New tenant registered
+              - generic [ref=f11e278]: Aspire Study Center started a 14-day trial
+            - generic [ref=f11e279]: 1 hr ago
+          - listitem [ref=f11e280]:
+            - generic [ref=f11e282]:
+              - generic [ref=f11e283]: Plan upgraded to Pro
+              - generic [ref=f11e284]: Elite Study Hub · ₹8,999 / month
+            - generic [ref=f11e285]: 3 hrs ago
+          - listitem [ref=f11e286]:
+            - generic [ref=f11e288]:
+              - generic [ref=f11e289]: Branch added
+              - generic [ref=f11e290]: Focus Study Zone · Infocity (FZ-INF)
+            - generic [ref=f11e291]: Yesterday, 6:40 PM
+          - listitem [ref=f11e292]:
+            - generic [ref=f11e294]:
+              - generic [ref=f11e295]: Tenant suspended
+              - generic [ref=f11e296]: Quiet Pages Library · overdue subscription
+            - generic [ref=f11e297]: Yesterday, 11:15 AM
+          - listitem [ref=f11e298]:
+            - generic [ref=f11e300]:
+              - generic [ref=f11e301]: Payment received
+              - generic [ref=f11e302]: Gyan Deep Library · ₹8,999
+            - generic [ref=f11e303]: 2 days ago
+          - listitem [ref=f11e304]:
+            - generic [ref=f11e306]:
+              - generic [ref=f11e307]: Hall marked for maintenance
+              - generic [ref=f11e308]: Focus Study Zone · Upper Floor Hall
+            - generic [ref=f11e309]: 2 days ago

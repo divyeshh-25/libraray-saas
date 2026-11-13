@@ -1,0 +1,43 @@
+- generic [ref=f12e2]:
+  - generic [ref=f12e3]:
+    - generic [ref=f12e4]:
+      - generic [ref=f12e5]: W
+      - generic [ref=f12e6]: LMS
+    - generic [ref=f12e7]:
+      - heading "Run every library branch from one place." [level=2] [ref=f12e8]
+      - paragraph [ref=f12e9]: Admissions, seat allocation, fee collection and attendance for study libraries and reading halls.
+      - generic [ref=f12e10]:
+        - generic [ref=f12e11]:
+          - term [ref=f12e12]: Libraries
+          - definition [ref=f12e13]: "148"
+        - generic [ref=f12e14]:
+          - term [ref=f12e15]: Students
+          - definition [ref=f12e16]: 12,480
+        - generic [ref=f12e17]:
+          - term [ref=f12e18]: Branches
+          - definition [ref=f12e19]: "213"
+    - paragraph [ref=f12e20]: © 2026 DivyeshCodes
+  - generic [ref=f12e22]:
+    - heading "Welcome back" [level=1] [ref=f12e23]
+    - paragraph [ref=f12e24]: Sign in to your admin account.
+    - generic [ref=f12e25]:
+      - generic [ref=f12e26]:
+        - generic [ref=f12e27]: Email
+        - textbox "Email" [ref=f12e28]:
+          - /placeholder: you@company.com
+      - generic [ref=f12e29]:
+        - generic [ref=f12e30]: Password
+        - generic [ref=f12e31]:
+          - textbox "Password" [ref=f12e32]
+          - button "Show" [ref=f12e33] [cursor=pointer]
+      - generic [ref=f12e34]:
+        - generic [ref=f12e35] [cursor=pointer]:
+          - checkbox "Remember me" [ref=f12e36]
+          - text: Remember me
+        - link "Forgot password?" [ref=f12e37] [cursor=pointer]:
+          - /url: http://localhost:8765/forgot-password
+      - button "Sign in" [ref=f12e38] [cursor=pointer]
+    - paragraph [ref=f12e39]:
+      - text: New to DivyeshCodes?
+      - link "Create an account" [ref=f12e40] [cursor=pointer]:
+        - /url: http://localhost:8765/register

@@ -1,0 +1,119 @@
+- generic [ref=f26e2]:
+  - complementary [ref=f26e3]:
+    - generic [ref=f26e4]:
+      - generic [ref=f26e5]: W
+      - generic [ref=f26e6]: LMS
+    - navigation [ref=f26e7]:
+      - link "Dashboard" [ref=f26e8] [cursor=pointer]:
+        - /url: http://localhost:8765/dashboard
+      - link "Tenants" [ref=f26e14] [cursor=pointer]:
+        - /url: http://localhost:8765/tenants
+      - link "Plans" [ref=f26e17] [cursor=pointer]:
+        - /url: http://localhost:8765/plans
+      - link "Branches" [ref=f26e21] [cursor=pointer]:
+        - /url: http://localhost:8765/branches
+      - link "Halls" [ref=f26e25] [cursor=pointer]:
+        - /url: http://localhost:8765/halls
+      - link "Staff" [ref=f26e31] [cursor=pointer]:
+        - /url: http://localhost:8765/staff
+      - link "Students" [ref=f26e35] [cursor=pointer]:
+        - /url: http://localhost:8765/students
+      - button "Settings" [ref=f26e40] [cursor=pointer]
+    - button "DP Divyesh Panchal Super Admin" [ref=f26e47] [cursor=pointer]:
+      - generic [ref=f26e48]: DP
+      - generic [ref=f26e49]:
+        - generic [ref=f26e50]: Divyesh Panchal
+        - generic [ref=f26e51]: Super Admin
+  - generic [ref=f26e54]:
+    - banner [ref=f26e55]:
+      - textbox "Search tenants, students, branches…" [ref=f26e60]
+      - generic [ref=f26e61]:
+        - generic [ref=f26e62]: Fri, 13 Nov 2026
+        - button "Notifications" [ref=f26e64] [cursor=pointer]
+    - main [ref=f26e68]:
+      - generic [ref=f26e69]:
+        - generic [ref=f26e70]:
+          - heading "Tenants" [level=1] [ref=f26e71]
+          - paragraph [ref=f26e72]: Libraries that subscribe to the platform
+        - generic [ref=f26e73]:
+          - button "Export" [ref=f26e74] [cursor=pointer]
+          - link "Add tenant" [ref=f26e75] [cursor=pointer]:
+            - /url: http://localhost:8765/tenants/create
+      - generic [ref=f26e78]:
+        - generic [ref=f26e79]:
+          - textbox "Search by library, owner or email" [ref=f26e84]
+          - combobox [ref=f26e85]:
+            - option "All plans" [selected]
+            - option "Starter"
+            - option "Growth"
+            - option "Pro"
+          - combobox [ref=f26e86]:
+            - option "All statuses" [selected]
+            - option "Active"
+            - option "Trial"
+            - option "Suspended"
+            - option "Expired"
+          - combobox [ref=f26e87]:
+            - option "All cities" [selected]
+            - option "Ahmedabad"
+            - option "Surat"
+            - option "Vadodara"
+            - option "Rajkot"
+            - option "Gandhinagar"
+        - table [ref=f26e89]:
+          - rowgroup [ref=f26e90]:
+            - row [ref=f26e91]:
+              - columnheader "Library" [ref=f26e92]
+              - columnheader "City" [ref=f26e93]
+              - columnheader "Plan" [ref=f26e94]
+              - columnheader "Status" [ref=f26e95]
+              - columnheader "Branches" [ref=f26e96]
+              - columnheader "Students" [ref=f26e97]
+              - columnheader "Joined" [ref=f26e98]
+              - columnheader [ref=f26e99]
+          - rowgroup [ref=f26e100]:
+            - row [ref=f26e101]:
+              - cell [ref=f26e102]
+              - cell [ref=f26e104]
+              - cell [ref=f26e106]
+              - cell [ref=f26e108]
+              - cell [ref=f26e110]
+              - cell [ref=f26e112]
+              - cell [ref=f26e114]
+              - cell [ref=f26e116]
+            - row [ref=f26e118]:
+              - cell [ref=f26e119]
+              - cell [ref=f26e121]
+              - cell [ref=f26e123]
+              - cell [ref=f26e125]
+              - cell [ref=f26e127]
+              - cell [ref=f26e129]
+              - cell [ref=f26e131]
+              - cell [ref=f26e133]
+            - row [ref=f26e135]:
+              - cell [ref=f26e136]
+              - cell [ref=f26e138]
+              - cell [ref=f26e140]
+              - cell [ref=f26e142]
+              - cell [ref=f26e144]
+              - cell [ref=f26e146]
+              - cell [ref=f26e148]
+              - cell [ref=f26e150]
+            - row [ref=f26e152]:
+              - cell [ref=f26e153]
+              - cell [ref=f26e155]
+              - cell [ref=f26e157]
+              - cell [ref=f26e159]
+              - cell [ref=f26e161]
+              - cell [ref=f26e163]
+              - cell [ref=f26e165]
+              - cell [ref=f26e167]
+            - row [ref=f26e169]:
+              - cell [ref=f26e170]
+              - cell [ref=f26e172]
+              - cell [ref=f26e174]
+              - cell [ref=f26e176]
+              - cell [ref=f26e178]
+              - cell [ref=f26e180]
+              - cell [ref=f26e182]
+              - cell [ref=f26e184]

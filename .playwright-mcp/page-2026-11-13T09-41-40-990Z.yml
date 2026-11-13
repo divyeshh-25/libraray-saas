@@ -1,0 +1,71 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - banner [ref=e5]:
+        - generic [ref=e6]:
+          - generic [ref=e8]:
+            - button "dbdiagram-logo dbdiagram" [ref=e10] [cursor=pointer]:
+              - img "dbdiagram-logo" [ref=e11]
+              - generic [ref=e12]: dbdiagram
+            - generic [ref=e15]: /
+            - textbox [disabled] [ref=e21]:
+              - /placeholder: Untitled Diagram
+          - button [ref=e24] [cursor=pointer]
+      - generic [ref=e27]:
+        - generic [ref=e28]:
+          - generic [ref=e29]:
+            - code [ref=e32]:
+              - generic [ref=e33]:
+                - generic [ref=e36]: "1"
+                - textbox "Editor content;Press Alt+F1 for Accessibility Options." [ref=e45]
+            - link "banner image Try Anfra, Open-Source Data Apps Install the CLI, ask your coding agent for a dashboard, and run it locally." [ref=e50] [cursor=pointer]:
+              - /url: https://github.com/holistics/anfra?utm_source=dbdiagram&utm_medium=ads
+              - generic [ref=e51]:
+                - img "banner image" [ref=e53]
+                - generic [ref=e54]:
+                  - generic [ref=e55]: Try Anfra, Open-Source Data Apps
+                  - paragraph [ref=e57]: Install the CLI, ask your coding agent for a dashboard, and run it locally.
+          - generic [ref=e62] [cursor=pointer]
+        - generic [ref=e65]:
+          - generic [ref=e72]:
+            - heading "No database schema found" [level=3] [ref=e76]
+            - paragraph [ref=e77]: Your DBML code doesn't contain any tables yet. Add tables and relationships to see your diagram.
+            - button "Start adding tables" [ref=e79] [cursor=pointer]
+          - generic [ref=e83]:
+            - generic [ref=e84]:
+              - button [ref=e86] [cursor=pointer]
+              - generic [ref=e89]: 100%
+              - button [ref=e92] [cursor=pointer]
+            - generic [ref=e96]:
+              - button "1" [ref=e98] [cursor=pointer]
+              - button [ref=e106] [cursor=pointer]
+          - generic [ref=e110]:
+            - generic [ref=e111]:
+              - generic [ref=e112]:
+                - button [ref=e115] [cursor=pointer]
+                - generic: "2"
+              - button "3" [ref=e126] [cursor=pointer]
+              - button "4" [ref=e132] [cursor=pointer]
+            - button [ref=e137] [cursor=pointer]
+          - button [ref=e141] [cursor=pointer]
+    - generic [ref=e146]:
+      - button "Close" [ref=e147] [cursor=pointer]
+      - img "banner image" [ref=e151]
+      - generic [ref=e152]:
+        - generic [ref=e153]:
+          - 'heading "anfra: the open-source engine for agentic analytics" [level=2] [ref=e154]'
+          - paragraph [ref=e155]: anfra lets your coding agent turn any database into interactive, governed data apps. Install the CLI, point it at your warehouse, and ship your first BI app in less than 10 minutes.
+        - button "Learn more" [ref=e157] [cursor=pointer]
+        - generic [ref=e159]:
+          - generic [ref=e161]:
+            - button "Go to slide 1" [ref=e162] [cursor=pointer]
+            - button "Go to slide 2" [ref=e163] [cursor=pointer]
+            - button "Go to slide 3" [ref=e164] [cursor=pointer]
+            - button "Go to slide 4" [ref=e165] [cursor=pointer]
+          - button [ref=e166] [cursor=pointer]
+  - generic "Loading" [ref=e169]
+  - generic [ref=e177]:
+    - alert
+    - alert
+    - complementary
+    - complementary

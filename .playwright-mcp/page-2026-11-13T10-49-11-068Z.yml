@@ -1,0 +1,190 @@
+- generic [ref=f10e2]:
+  - complementary [ref=f10e3]:
+    - generic [ref=f10e4]:
+      - generic [ref=f10e5]: W
+      - generic [ref=f10e6]: LMS
+    - navigation [ref=f10e7]:
+      - link "Dashboard" [ref=f10e8] [cursor=pointer]:
+        - /url: http://localhost:8765/dashboard
+      - link "Tenants" [ref=f10e14] [cursor=pointer]:
+        - /url: http://localhost:8765/tenants
+      - link "Plans" [ref=f10e17] [cursor=pointer]:
+        - /url: http://localhost:8765/plans
+      - link "Branches" [ref=f10e21] [cursor=pointer]:
+        - /url: http://localhost:8765/branches
+      - link "Halls" [ref=f10e25] [cursor=pointer]:
+        - /url: http://localhost:8765/halls
+      - link "Staff" [ref=f10e31] [cursor=pointer]:
+        - /url: http://localhost:8765/staff
+      - link "Students" [ref=f10e35] [cursor=pointer]:
+        - /url: http://localhost:8765/students
+      - generic [ref=f10e39]:
+        - button "Settings" [ref=f10e40] [cursor=pointer]
+        - generic [ref=f10e46]:
+          - link "Fee Structure" [ref=f10e47] [cursor=pointer]:
+            - /url: http://localhost:8765/settings/fee-structure
+          - link "General Settings" [ref=f10e48] [cursor=pointer]:
+            - /url: http://localhost:8765/settings/general
+          - link "Roles & Permissions" [ref=f10e49] [cursor=pointer]:
+            - /url: http://localhost:8765/settings/roles
+    - generic [ref=f10e50]:
+      - generic [ref=f10e51]: DP
+      - generic [ref=f10e52]:
+        - generic [ref=f10e53]: Divyesh Panchal
+        - generic [ref=f10e54]: Super Admin
+  - generic [ref=f10e55]:
+    - banner [ref=f10e56]:
+      - textbox "Search tenants, students, branches…" [ref=f10e61]
+      - generic [ref=f10e62]: Fri, 13 Nov 2026
+    - main [ref=f10e64]:
+      - generic [ref=f10e65]:
+        - generic [ref=f10e66]:
+          - heading "Roles & Permissions" [level=1] [ref=f10e67]
+          - paragraph [ref=f10e68]: Control what each role can see and do
+        - button "New role" [ref=f10e70] [cursor=pointer]
+      - generic [ref=f10e73]:
+        - generic [ref=f10e74]:
+          - generic [ref=f10e75]: Roles
+          - list [ref=f10e77]:
+            - listitem [ref=f10e78]:
+              - button "Owner 1 user Full access to every module and setting" [ref=f10e79] [cursor=pointer]:
+                - generic [ref=f10e80]:
+                  - generic [ref=f10e81]: Owner
+                  - generic [ref=f10e82]: 1 user
+                - generic [ref=f10e83]: Full access to every module and setting
+            - listitem [ref=f10e84]:
+              - 'button "Manager 6 users Runs a branch: students, staff, halls and fees" [ref=f10e85] [cursor=pointer]':
+                - generic [ref=f10e86]:
+                  - generic [ref=f10e87]: Manager
+                  - generic [ref=f10e88]: 6 users
+                - generic [ref=f10e89]: "Runs a branch: students, staff, halls and fees"
+            - listitem [ref=f10e90]:
+              - button "Accountant 4 users Fee invoices, payments and reports" [ref=f10e91] [cursor=pointer]:
+                - generic [ref=f10e92]:
+                  - generic [ref=f10e93]: Accountant
+                  - generic [ref=f10e94]: 4 users
+                - generic [ref=f10e95]: Fee invoices, payments and reports
+            - listitem [ref=f10e96]:
+              - button "Receptionist 9 users Admissions, attendance and seat allocation" [ref=f10e97] [cursor=pointer]:
+                - generic [ref=f10e98]:
+                  - generic [ref=f10e99]: Receptionist
+                  - generic [ref=f10e100]: 9 users
+                - generic [ref=f10e101]: Admissions, attendance and seat allocation
+            - listitem [ref=f10e102]:
+              - button "Librarian 3 users Read-only access to students and halls" [ref=f10e103] [cursor=pointer]:
+                - generic [ref=f10e104]:
+                  - generic [ref=f10e105]: Librarian
+                  - generic [ref=f10e106]: 3 users
+                - generic [ref=f10e107]: Read-only access to students and halls
+        - generic [ref=f10e108]:
+          - generic [ref=f10e109]:
+            - generic [ref=f10e110]:
+              - generic [ref=f10e111]: Owner permissions
+              - generic [ref=f10e112]: System role · cannot be edited
+            - button "Save"
+          - table [ref=f10e114]:
+            - rowgroup [ref=f10e115]:
+              - row [ref=f10e116]:
+                - columnheader "Module" [ref=f10e117]
+                - columnheader "view" [ref=f10e118]
+                - columnheader "create" [ref=f10e119]
+                - columnheader "edit" [ref=f10e120]
+                - columnheader "delete" [ref=f10e121]
+                - columnheader "All" [ref=f10e122]
+            - rowgroup [ref=f10e123]:
+              - row [ref=f10e124]:
+                - cell "Tenants" [ref=f10e125]
+                - cell [ref=f10e126]:
+                  - checkbox [checked] [disabled] [ref=f10e127]
+                - cell [ref=f10e128]:
+                  - checkbox [checked] [disabled] [ref=f10e129]
+                - cell [ref=f10e130]:
+                  - checkbox [checked] [disabled] [ref=f10e131]
+                - cell [ref=f10e132]:
+                  - checkbox [checked] [disabled] [ref=f10e133]
+                - cell [ref=f10e134]:
+                  - checkbox [checked] [disabled] [ref=f10e135]
+              - row [ref=f10e136]:
+                - cell "Plans" [ref=f10e137]
+                - cell [ref=f10e138]:
+                  - checkbox [checked] [disabled] [ref=f10e139]
+                - cell [ref=f10e140]:
+                  - checkbox [checked] [disabled] [ref=f10e141]
+                - cell [ref=f10e142]:
+                  - checkbox [checked] [disabled] [ref=f10e143]
+                - cell [ref=f10e144]:
+                  - checkbox [checked] [disabled] [ref=f10e145]
+                - cell [ref=f10e146]:
+                  - checkbox [checked] [disabled] [ref=f10e147]
+              - row [ref=f10e148]:
+                - cell "Branches" [ref=f10e149]
+                - cell [ref=f10e150]:
+                  - checkbox [checked] [disabled] [ref=f10e151]
+                - cell [ref=f10e152]:
+                  - checkbox [checked] [disabled] [ref=f10e153]
+                - cell [ref=f10e154]:
+                  - checkbox [checked] [disabled] [ref=f10e155]
+                - cell [ref=f10e156]:
+                  - checkbox [checked] [disabled] [ref=f10e157]
+                - cell [ref=f10e158]:
+                  - checkbox [checked] [disabled] [ref=f10e159]
+              - row [ref=f10e160]:
+                - cell "Halls" [ref=f10e161]
+                - cell [ref=f10e162]:
+                  - checkbox [checked] [disabled] [ref=f10e163]
+                - cell [ref=f10e164]:
+                  - checkbox [checked] [disabled] [ref=f10e165]
+                - cell [ref=f10e166]:
+                  - checkbox [checked] [disabled] [ref=f10e167]
+                - cell [ref=f10e168]:
+                  - checkbox [checked] [disabled] [ref=f10e169]
+                - cell [ref=f10e170]:
+                  - checkbox [checked] [disabled] [ref=f10e171]
+              - row [ref=f10e172]:
+                - cell "Staff" [ref=f10e173]
+                - cell [ref=f10e174]:
+                  - checkbox [checked] [disabled] [ref=f10e175]
+                - cell [ref=f10e176]:
+                  - checkbox [checked] [disabled] [ref=f10e177]
+                - cell [ref=f10e178]:
+                  - checkbox [checked] [disabled] [ref=f10e179]
+                - cell [ref=f10e180]:
+                  - checkbox [checked] [disabled] [ref=f10e181]
+                - cell [ref=f10e182]:
+                  - checkbox [checked] [disabled] [ref=f10e183]
+              - row [ref=f10e184]:
+                - cell "Students" [ref=f10e185]
+                - cell [ref=f10e186]:
+                  - checkbox [checked] [disabled] [ref=f10e187]
+                - cell [ref=f10e188]:
+                  - checkbox [checked] [disabled] [ref=f10e189]
+                - cell [ref=f10e190]:
+                  - checkbox [checked] [disabled] [ref=f10e191]
+                - cell [ref=f10e192]:
+                  - checkbox [checked] [disabled] [ref=f10e193]
+                - cell [ref=f10e194]:
+                  - checkbox [checked] [disabled] [ref=f10e195]
+              - row [ref=f10e196]:
+                - cell "Fees" [ref=f10e197]
+                - cell [ref=f10e198]:
+                  - checkbox [checked] [disabled] [ref=f10e199]
+                - cell [ref=f10e200]:
+                  - checkbox [checked] [disabled] [ref=f10e201]
+                - cell [ref=f10e202]:
+                  - checkbox [checked] [disabled] [ref=f10e203]
+                - cell [ref=f10e204]:
+                  - checkbox [checked] [disabled] [ref=f10e205]
+                - cell [ref=f10e206]:
+                  - checkbox [checked] [disabled] [ref=f10e207]
+              - row [ref=f10e208]:
+                - cell "Settings" [ref=f10e209]
+                - cell [ref=f10e210]:
+                  - checkbox [checked] [disabled] [ref=f10e211]
+                - cell [ref=f10e212]:
+                  - checkbox [checked] [disabled] [ref=f10e213]
+                - cell [ref=f10e214]:
+                  - checkbox [checked] [disabled] [ref=f10e215]
+                - cell [ref=f10e216]:
+                  - checkbox [checked] [disabled] [ref=f10e217]
+                - cell [ref=f10e218]:
+                  - checkbox [checked] [disabled] [ref=f10e219]

@@ -1,0 +1,58 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e8]:
+      - heading "Library Floor Planner" [level=1] [ref=e9]
+      - generic [ref=e10]: 2D layout editor · runs locally
+    - generic [ref=e12]:
+      - generic [ref=e13]: Floor
+      - textbox "Floor" [ref=e14]: Ground Floor
+    - generic [ref=e15]:
+      - button "New" [ref=e16] [cursor=pointer]
+      - button "Import JSON" [ref=e20] [cursor=pointer]
+      - button "Export JSON" [ref=e24] [cursor=pointer]
+      - button "Save" [ref=e28] [cursor=pointer]
+  - complementary [ref=e32]:
+    - generic [ref=e33]:
+      - heading "Objects" [level=3] [ref=e34]
+      - generic [ref=e35]:
+        - button "Seat" [ref=e36]
+        - button "Wall" [ref=e40]
+        - button "Blocker" [ref=e44]
+        - button "Washroom" [ref=e48]
+        - button "Entry Gate" [ref=e52]
+        - button "Reception" [ref=e56]
+        - button "Office" [ref=e60]
+        - button "Other" [ref=e64]
+    - generic [ref=e68]:
+      - heading "Tips" [level=3] [ref=e69]
+      - list [ref=e71]:
+        - listitem [ref=e72]: Drag an object onto the canvas, or click to add it.
+        - listitem [ref=e73]: Drag on canvas to move; drag the blue corner to resize.
+        - listitem [ref=e74]: Del deletes, Ctrl+Z undoes.
+        - listitem [ref=e75]: Export JSON to keep a file copy; import to continue later.
+  - main [ref=e76]:
+    - generic [ref=e77]:
+      - generic [ref=e78]:
+        - button "Undo (Ctrl+Z)" [disabled] [ref=e79]
+        - 'button "Grid: ON" [ref=e82] [cursor=pointer]'
+      - generic [ref=e87]:
+        - button "Zoom out" [ref=e88] [cursor=pointer]
+        - button "100%" [ref=e90] [cursor=pointer]
+        - button "Zoom in" [ref=e91] [cursor=pointer]
+        - button "Fit to screen" [ref=e94] [cursor=pointer]
+      - generic [ref=e98]:
+        - generic [ref=e99]:
+          - text: W
+          - spinbutton "W" [ref=e100]: "1000"
+        - generic [ref=e101]:
+          - text: H
+          - spinbutton "H" [ref=e102]: "650"
+        - button "Apply" [ref=e103] [cursor=pointer]
+      - generic [ref=e104]: 0 objects
+    - generic [ref=e109]:
+      - generic [ref=e110]: Ready. Add an object to start designing.
+      - generic [ref=e111]: Top view · canvas units
+  - complementary [ref=e112]:
+    - generic [ref=e113]:
+      - heading "Properties" [level=3] [ref=e114]
+      - generic [ref=e115]: Select an object on the canvas to edit its properties.

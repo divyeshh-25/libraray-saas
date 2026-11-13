@@ -1,0 +1,33 @@
+{
+  "format": "library-floor-plan",
+  "version": 1,
+  "floor": {
+    "name": "Ground Floor",
+    "width": 1000,
+    "height": 650
+  },
+  "objects": [
+    {
+      "id": 1,
+      "type": "SEAT",
+      "name": "S1",
+      "x": 75,
+      "y": 75,
+      "w": 46,
+      "h": 46,
+      "rotation": 0,
+      "detail": ""
+    },
+    {
+      "id": 2,
+      "type": "OFFICE",
+      "name": "OFFICE",
+      "x": 300,
+      "y": 225,
+      "w": 130,
+      "h": 85,
+      "rotation": 0,
+      "detail": ""
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - banner [ref=e5]:
+        - generic [ref=e6]:
+          - generic [ref=e7]:
+            - generic [ref=e8]:
+              - button "dbdiagram-logo dbdiagram" [ref=e10] [cursor=pointer]:
+                - img "dbdiagram-logo" [ref=e11]
+                - generic [ref=e12]: dbdiagram
+              - generic [ref=e15]: /
+              - generic [ref=e16]:
+                - img "saved" [ref=e18]
+                - textbox [disabled] [ref=e23]:
+                  - /placeholder: Untitled Diagram
+                  - text: LMS Phase 1
+            - button "Edit as New" [ref=e24] [cursor=pointer]
+            - button "Export" [ref=e28] [cursor=pointer]
+            - link "Open-source BI Builder. Build your own BI apps with coding agents, on shared metrics governed in a semantic layer" [ref=e33] [cursor=pointer]:
+              - /url: https://x.com/anfraAI/status/2120552602924634525
+              - generic [ref=e34]: Open-source BI Builder
+          - generic [ref=e35]:
+            - button "en" [ref=e38] [cursor=pointer]
+            - link "Follow @dbdiagram on X" [ref=e44] [cursor=pointer]:
+              - /url: https://x.com/intent/follow?screen_name=dbdiagram
+              - generic [ref=e47]: Follow us
+            - button [ref=e50] [cursor=pointer]
+            - button "Sign in" [ref=e55] [cursor=pointer]
+      - generic [ref=e59]:
+        - generic [ref=e60]:
+          - generic [ref=e61]:
+            - code [ref=e64]:
+              - generic [ref=e65]:
+                - generic [aria-hidden] [ref=e67]:
+                  - generic [ref=e68]: "1"
+                  - generic [ref=e71]:
+                    - generic [ref=e72] [cursor=pointer]: 
+                    - generic [ref=e73]: "2"
+                  - generic [ref=e74]: "3"
+                  - generic [ref=e76]: "4"
+                  - generic [ref=e78]: "5"
+                  - generic [ref=e80]: "6"
+                  - generic [ref=e82]: "7"
+                  - generic [ref=e84]: "8"
+                  - generic [ref=e86]: "9"
+                  - generic [ref=e88]: "10"
+                  - generic [ref=e90]:
+                    - generic [ref=e91] [cursor=pointer]: 
+                    - generic [ref=e92]: "11"
+                  - generic [ref=e93]: "12"
+                  - generic [ref=e95]: "13"
+                  - generic [ref=e97]: "14"
+                  - generic [ref=e99]: "15"
+                  - generic [ref=e101]: "16"
+                  - generic [ref=e103]: "17"
+                  - generic [ref=e105]: "18"
+                  - generic [ref=e107]: "19"
+                  - generic [ref=e109]: "20"
+                  - generic [ref=e111]: "21"
+                  - generic [ref=e113]: "22"
+                  - generic [ref=e115]:
+                    - generic [ref=e116] [cursor=pointer]: 
+                    - generic [ref=e117]: "23"
+                  - generic [ref=e118]: "24"
+                  - generic [ref=e120]: "25"
+                  - generic [ref=e122]: "26"
+                  - generic [ref=e124]: "27"
+                  - generic [ref=e126]: "28"
+                  - generic [ref=e128]: "29"
+                  - generic [ref=e130]: "30"
+                  - generic [ref=e132]: "31"
+                  - generic [ref=e134]: "32"
+                  - generic [ref=e136]: "33"
+                  - generic [ref=e138]:
+                    - generic [ref=e139] [cursor=pointer]: 
+                    - generic [ref=e140]: "34"
+                  - generic [ref=e141]: "35"
+                  - generic [ref=e143]: "36"
+                  - generic [ref=e145]: "37"
+                - generic [aria-hidden] [ref=e211]:
+                  - generic [ref=e213]: "Project LMS_Phase_1 {"
+                  - generic [ref=e215]: "database_type: 'MySQL'"
+                  - generic [ref=e217]: "Note: 'Multi-Tenant Multi-Branch Library Management System'"
+                  - generic [ref=e219]: "}"
+                  - generic [ref=e222]: // ==========================================
+                  - generic [ref=e224]: // 1. TENANT & SUBSCRIPTION MANAGEMENT
+                  - generic [ref=e226]: // ==========================================
+                  - generic [ref=e229]: "Table tenants {"
+                  - generic [ref=e231]: id bigint [pk, increment]
+                  - generic [ref=e233]: owner_name varchar(150)
+                  - generic [ref=e235]: library_name varchar(200)
+                  - generic [ref=e237]: email varchar(150)
+                  - generic [ref=e239]: phone varchar(20)
+                  - generic [ref=e241]: address text
+                  - generic [ref=e243]: status varchar(30)
+                  - generic [ref=e245]: created_at timestamp
+                  - generic [ref=e247]: updated_at timestamp
+                  - generic [ref=e249]: "}"
+                  - generic [ref=e252]: "Table branches {"
+                  - generic [ref=e254]: id bigint [pk, increment]
+                  - generic [ref=e256]: tenant_id bigint [not null]
+                  - generic [ref=e258]: name varchar(150)
+                  - generic [ref=e260]: code varchar(50)
+                  - generic [ref=e262]: address text
+                  - generic [ref=e264]: phone varchar(20)
+                  - generic [ref=e266]: status varchar(30)
+                  - generic [ref=e268]: created_at timestamp
+                  - generic [ref=e270]: updated_at timestamp
+                  - generic [ref=e273]: "indexes {"
+                  - generic [ref=e275]: (tenant_id, code) [unique]
+                  - generic [ref=e277]: "}"
+                  - generic [ref=e279]: "}"
+                - textbox "Editor content;Press Alt+F1 for Accessibility Options." [ref=e282]: "Project LMS_Phase_1 { database_type: 'MySQL' Note: 'Multi-Tenant Multi-Branch Library Management System' } // ========================================== // 1. TENANT & SUBSCRIPTION MANAGEMENT // =========================================="
+            - generic [ref=e283]:
+              - link "banner image Build Data Apps With Your AI Agent Anfra is an open-source framework for AI-built dashboards on a semantic layer." [ref=e287] [cursor=pointer]:
+                - /url: https://github.com/holistics/anfra?utm_source=dbdiagram&utm_medium=ads
+                - generic [ref=e288]:
+                  - img "banner image" [ref=e290]
+                  - generic [ref=e291]:
+                    - generic [ref=e292]: Build Data Apps With Your AI Agent
+                    - paragraph [ref=e294]: Anfra is an open-source framework for AI-built dashboards on a semantic layer.
+              - link "From Holistics folks with love" [ref=e299] [cursor=pointer]:
+                - /url: https://holistics.io/?utm_source=dbdiagramio&utm_medium=web_right_bottom&utm_content=_unit_name_
+          - generic [ref=e301] [cursor=pointer]
+        - generic [ref=e304]:
+          - generic [ref=e307]:
+            - generic [ref=e308]:
+              - button [ref=e310] [cursor=pointer]
+              - generic [ref=e313]: 100%
+              - button [ref=e316] [cursor=pointer]
+            - generic [ref=e320]:
+              - button "1" [ref=e322] [cursor=pointer]
+              - button [ref=e330] [cursor=pointer]
+          - generic [ref=e334]:
+            - generic [ref=e335]:
+              - generic [ref=e336]:
+                - button [ref=e339] [cursor=pointer]
+                - generic: "2"
+              - button "3" [ref=e350] [cursor=pointer]
+              - button "4" [ref=e356] [cursor=pointer]
+            - button [ref=e361] [cursor=pointer]
+          - button [ref=e365] [cursor=pointer]
+    - generic [ref=e370]:
+      - button "Close" [ref=e371] [cursor=pointer]
+      - img "banner image" [ref=e375]
+      - generic [ref=e376]:
+        - generic [ref=e377]:
+          - 'heading "🧾 Pricing update: one plan, private by default" [level=2] [ref=e378]'
+          - paragraph [ref=e379]: We've revamped our pricing models. Now, you only need to buy one plan for both dbdiagram and dbdocs. Private mode is also free, and the dbdocs paid-project add-on is no longer available.
+        - button "Learn more" [ref=e381] [cursor=pointer]
+  - generic [ref=e383]:
+    - alert
+    - alert
+    - complementary
+    - complementary

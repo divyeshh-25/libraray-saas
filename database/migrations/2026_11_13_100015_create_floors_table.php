@@ -1,0 +1,30 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('floors', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('branch_id')->constrained('branches')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('hall_id')->constrained('halls')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->string('name', 150);
+            $table->integer('floor_number')->default(0);
+            $table->decimal('width', 10, 2)->nullable();
+            $table->decimal('height', 10, 2)->nullable();
+            $table->string('status', 30)->default('active');
+            $table->timestamps();
+
+            $table->unique(['hall_id', 'floor_number']);
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('floors');
+    }
+};

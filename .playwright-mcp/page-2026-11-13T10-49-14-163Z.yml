@@ -1,0 +1,207 @@
+- generic [ref=f11e2]:
+  - complementary [ref=f11e3]:
+    - generic [ref=f11e4]:
+      - generic [ref=f11e5]: W
+      - generic [ref=f11e6]: LMS
+    - navigation [ref=f11e7]:
+      - link "Dashboard" [ref=f11e8] [cursor=pointer]:
+        - /url: http://localhost:8765/dashboard
+      - link "Tenants" [ref=f11e14] [cursor=pointer]:
+        - /url: http://localhost:8765/tenants
+      - link "Plans" [ref=f11e17] [cursor=pointer]:
+        - /url: http://localhost:8765/plans
+      - link "Branches" [ref=f11e21] [cursor=pointer]:
+        - /url: http://localhost:8765/branches
+      - link "Halls" [ref=f11e25] [cursor=pointer]:
+        - /url: http://localhost:8765/halls
+      - link "Staff" [ref=f11e31] [cursor=pointer]:
+        - /url: http://localhost:8765/staff
+      - link "Students" [ref=f11e35] [cursor=pointer]:
+        - /url: http://localhost:8765/students
+      - button "Settings" [ref=f11e40] [cursor=pointer]
+    - generic [ref=f11e46]:
+      - generic [ref=f11e47]: DP
+      - generic [ref=f11e48]:
+        - generic [ref=f11e49]: Divyesh Panchal
+        - generic [ref=f11e50]: Super Admin
+  - generic [ref=f11e51]:
+    - banner [ref=f11e52]:
+      - button "Open menu" [ref=f11e53] [cursor=pointer]
+    - main [ref=f11e56]:
+      - generic [ref=f11e57]:
+        - generic [ref=f11e58]:
+          - heading "Tenants" [level=1] [ref=f11e59]
+          - paragraph [ref=f11e60]: Libraries that subscribe to the platform
+        - generic [ref=f11e61]:
+          - button "Export" [ref=f11e62] [cursor=pointer]
+          - link "Add tenant" [ref=f11e63] [cursor=pointer]:
+            - /url: http://localhost:8765/tenants/create
+      - generic [ref=f11e66]:
+        - generic [ref=f11e67]:
+          - textbox "Search by library, owner or email" [ref=f11e72]
+          - combobox [ref=f11e73]:
+            - option "All plans" [selected]
+            - option "Starter"
+            - option "Growth"
+            - option "Pro"
+          - combobox [ref=f11e74]:
+            - option "All statuses" [selected]
+            - option "Active"
+            - option "Trial"
+            - option "Suspended"
+            - option "Expired"
+          - combobox [ref=f11e75]:
+            - option "All cities" [selected]
+            - option "Ahmedabad"
+            - option "Surat"
+            - option "Vadodara"
+            - option "Rajkot"
+            - option "Gandhinagar"
+          - generic [ref=f11e76]: 12 results
+        - table [ref=f11e78]:
+          - rowgroup [ref=f11e79]:
+            - row [ref=f11e80]:
+              - columnheader "Library" [ref=f11e81]
+              - columnheader "City" [ref=f11e82]
+              - columnheader "Plan" [ref=f11e83]
+              - columnheader "Status" [ref=f11e84]
+              - columnheader "Branches" [ref=f11e85]
+              - columnheader "Students" [ref=f11e86]
+              - columnheader "Joined" [ref=f11e87]
+              - columnheader [ref=f11e88]
+          - rowgroup [ref=f11e89]:
+            - row [ref=f11e90]:
+              - cell "GD Gyan Deep Library Anand Verma · anand@gyandeep.in" [ref=f11e91]:
+                - generic [ref=f11e92]:
+                  - generic [ref=f11e93]: GD
+                  - generic [ref=f11e94]:
+                    - link "Gyan Deep Library" [ref=f11e95] [cursor=pointer]:
+                      - /url: http://localhost:8765/tenants/1
+                    - generic [ref=f11e96]: Anand Verma · anand@gyandeep.in
+              - cell "Ahmedabad" [ref=f11e97]
+              - cell "Pro" [ref=f11e98]
+              - cell "Active" [ref=f11e99]
+              - cell "4" [ref=f11e101]
+              - cell "612" [ref=f11e102]
+              - cell "12 Jan 2025" [ref=f11e103]
+              - cell [ref=f11e104]:
+                - button "Actions" [ref=f11e106] [cursor=pointer]
+            - row [ref=f11e111]:
+              - cell "SS Saraswati Study Hub Meera Shah · meera@saraswatihub.in" [ref=f11e112]:
+                - generic [ref=f11e113]:
+                  - generic [ref=f11e114]: SS
+                  - generic [ref=f11e115]:
+                    - link "Saraswati Study Hub" [ref=f11e116] [cursor=pointer]:
+                      - /url: http://localhost:8765/tenants/2
+                    - generic [ref=f11e117]: Meera Shah · meera@saraswatihub.in
+              - cell "Surat" [ref=f11e118]
+              - cell "Growth" [ref=f11e119]
+              - cell "Active" [ref=f11e120]
+              - cell "2" [ref=f11e122]
+              - cell "284" [ref=f11e123]
+              - cell "04 Feb 2025" [ref=f11e124]
+              - cell [ref=f11e125]:
+                - button "Actions" [ref=f11e127] [cursor=pointer]
+            - row [ref=f11e132]:
+              - cell "SC Scholars Corner Rohit Patel · rohit@scholarscorner.in" [ref=f11e133]:
+                - generic [ref=f11e134]:
+                  - generic [ref=f11e135]: SC
+                  - generic [ref=f11e136]:
+                    - link "Scholars Corner" [ref=f11e137] [cursor=pointer]:
+                      - /url: http://localhost:8765/tenants/3
+                    - generic [ref=f11e138]: Rohit Patel · rohit@scholarscorner.in
+              - cell "Vadodara" [ref=f11e139]
+              - cell "Starter" [ref=f11e140]
+              - cell "Active" [ref=f11e141]
+              - cell "1" [ref=f11e143]
+              - cell "96" [ref=f11e144]
+              - cell "27 Feb 2025" [ref=f11e145]
+              - cell [ref=f11e146]:
+                - button "Actions" [ref=f11e148] [cursor=pointer]
+            - row [ref=f11e153]:
+              - cell "PR Pustak Reading Lounge Kavita Joshi · kavita@pustaklounge.in" [ref=f11e154]:
+                - generic [ref=f11e155]:
+                  - generic [ref=f11e156]: PR
+                  - generic [ref=f11e157]:
+                    - link "Pustak Reading Lounge" [ref=f11e158] [cursor=pointer]:
+                      - /url: http://localhost:8765/tenants/4
+                    - generic [ref=f11e159]: Kavita Joshi · kavita@pustaklounge.in
+              - cell "Rajkot" [ref=f11e160]
+              - cell "Growth" [ref=f11e161]
+              - cell "Trial" [ref=f11e162]
+              - cell "2" [ref=f11e164]
+              - cell "131" [ref=f11e165]
+              - cell "22 Mar 2025" [ref=f11e166]
+              - cell [ref=f11e167]:
+                - button "Actions" [ref=f11e169] [cursor=pointer]
+            - row [ref=f11e174]:
+              - cell "FS Focus Study Zone Sanjay Desai · sanjay@focuszone.in" [ref=f11e175]:
+                - generic [ref=f11e176]:
+                  - generic [ref=f11e177]: FS
+                  - generic [ref=f11e178]:
+                    - link "Focus Study Zone" [ref=f11e179] [cursor=pointer]:
+                      - /url: http://localhost:8765/tenants/5
+                    - generic [ref=f11e180]: Sanjay Desai · sanjay@focuszone.in
+              - cell "Gandhinagar" [ref=f11e181]
+              - cell "Pro" [ref=f11e182]
+              - cell "Active" [ref=f11e183]
+              - cell "5" [ref=f11e185]
+              - cell "745" [ref=f11e186]
+              - cell "14 Apr 2025" [ref=f11e187]
+              - cell [ref=f11e188]:
+                - button "Actions" [ref=f11e190] [cursor=pointer]
+            - row [ref=f11e195]:
+              - cell "QP Quiet Pages Library Nisha Trivedi · nisha@quietpages.in" [ref=f11e196]:
+                - generic [ref=f11e197]:
+                  - generic [ref=f11e198]: QP
+                  - generic [ref=f11e199]:
+                    - link "Quiet Pages Library" [ref=f11e200] [cursor=pointer]:
+                      - /url: http://localhost:8765/tenants/6
+                    - generic [ref=f11e201]: Nisha Trivedi · nisha@quietpages.in
+              - cell "Bhavnagar" [ref=f11e202]
+              - cell "Starter" [ref=f11e203]
+              - cell "Suspended" [ref=f11e204]
+              - cell "1" [ref=f11e206]
+              - cell "54" [ref=f11e207]
+              - cell "07 May 2025" [ref=f11e208]
+              - cell [ref=f11e209]:
+                - button "Actions" [ref=f11e211] [cursor=pointer]
+            - row [ref=f11e216]:
+              - cell "KP Knowledge Point Harsh Mehta · harsh@knowledgepoint.in" [ref=f11e217]:
+                - generic [ref=f11e218]:
+                  - generic [ref=f11e219]: KP
+                  - generic [ref=f11e220]:
+                    - link "Knowledge Point" [ref=f11e221] [cursor=pointer]:
+                      - /url: http://localhost:8765/tenants/7
+                    - generic [ref=f11e222]: Harsh Mehta · harsh@knowledgepoint.in
+              - cell "Ahmedabad" [ref=f11e223]
+              - cell "Growth" [ref=f11e224]
+              - cell "Active" [ref=f11e225]
+              - cell "3" [ref=f11e227]
+              - cell "402" [ref=f11e228]
+              - cell "30 May 2025" [ref=f11e229]
+              - cell [ref=f11e230]:
+                - button "Actions" [ref=f11e232] [cursor=pointer]
+            - row [ref=f11e237]:
+              - cell "AS Aspire Study Center Pooja Rana · pooja@aspirecenter.in" [ref=f11e238]:
+                - generic [ref=f11e239]:
+                  - generic [ref=f11e240]: AS
+                  - generic [ref=f11e241]:
+                    - link "Aspire Study Center" [ref=f11e242] [cursor=pointer]:
+                      - /url: http://localhost:8765/tenants/8
+                    - generic [ref=f11e243]: Pooja Rana · pooja@aspirecenter.in
+              - cell "Surat" [ref=f11e244]
+              - cell "Starter" [ref=f11e245]
+              - cell "Trial" [ref=f11e246]
+              - cell "1" [ref=f11e248]
+              - cell "48" [ref=f11e249]
+              - cell "22 Jun 2025" [ref=f11e250]
+              - cell [ref=f11e251]:
+                - button "Actions" [ref=f11e253] [cursor=pointer]
+        - generic [ref=f11e258]:
+          - generic [ref=f11e259]: Showing 1–8 of 12
+          - generic [ref=f11e260]:
+            - button "Previous" [disabled] [ref=f11e261]
+            - button "1" [ref=f11e262] [cursor=pointer]
+            - button "2" [ref=f11e263] [cursor=pointer]
+            - button "Next" [ref=f11e264] [cursor=pointer]

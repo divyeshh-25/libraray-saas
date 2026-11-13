@@ -1,0 +1,213 @@
+- generic [ref=f18e2]:
+  - complementary [ref=f18e3]:
+    - generic [ref=f18e4]:
+      - generic [ref=f18e5]: W
+      - generic [ref=f18e6]: LMS
+    - navigation [ref=f18e7]:
+      - link "Dashboard" [ref=f18e8] [cursor=pointer]:
+        - /url: http://localhost:8765/dashboard
+      - link "Tenants" [ref=f18e14] [cursor=pointer]:
+        - /url: http://localhost:8765/tenants
+      - link "Plans" [ref=f18e17] [cursor=pointer]:
+        - /url: http://localhost:8765/plans
+      - link "Branches" [ref=f18e21] [cursor=pointer]:
+        - /url: http://localhost:8765/branches
+      - link "Halls" [ref=f18e25] [cursor=pointer]:
+        - /url: http://localhost:8765/halls
+      - link "Staff" [ref=f18e31] [cursor=pointer]:
+        - /url: http://localhost:8765/staff
+      - link "Students" [ref=f18e35] [cursor=pointer]:
+        - /url: http://localhost:8765/students
+      - button "Settings" [ref=f18e40] [cursor=pointer]
+    - button "DP Divyesh Panchal Super Admin" [ref=f18e47] [cursor=pointer]:
+      - generic [ref=f18e48]: DP
+      - generic [ref=f18e49]:
+        - generic [ref=f18e50]: Divyesh Panchal
+        - generic [ref=f18e51]: Super Admin
+  - generic [ref=f18e54]:
+    - banner [ref=f18e55]:
+      - textbox "Search tenants, students, branches…" [ref=f18e60]
+      - generic [ref=f18e61]: Fri, 13 Nov 2026
+    - main [ref=f18e63]:
+      - generic [ref=f18e64]:
+        - generic [ref=f18e65]:
+          - heading "Dashboard" [level=1] [ref=f18e66]
+          - paragraph [ref=f18e67]: Platform overview for November 2026
+        - link "Add tenant" [ref=f18e69] [cursor=pointer]:
+          - /url: http://localhost:8765/tenants/create
+      - generic [ref=f18e72]:
+        - generic [ref=f18e73]:
+          - generic [ref=f18e74]: Active tenants
+          - generic [ref=f18e75]:
+            - generic [ref=f18e76]: "148"
+            - generic [ref=f18e77]: "+6"
+          - generic [ref=f18e78]: 12 on trial
+        - generic [ref=f18e79]:
+          - generic [ref=f18e80]: Registered students
+          - generic [ref=f18e81]:
+            - generic [ref=f18e82]: 12,480
+            - generic [ref=f18e83]: +4.1%
+          - generic [ref=f18e84]: across 213 branches
+        - generic [ref=f18e85]:
+          - generic [ref=f18e86]: Monthly revenue
+          - generic [ref=f18e87]:
+            - generic [ref=f18e88]: ₹6.48 L
+            - generic [ref=f18e89]: +5.9%
+          - generic [ref=f18e90]: vs ₹6.12 L in October
+        - generic [ref=f18e91]:
+          - generic [ref=f18e92]: Seat occupancy
+          - generic [ref=f18e93]:
+            - generic [ref=f18e94]: 71%
+            - generic [ref=f18e95]: "-1.2%"
+          - generic [ref=f18e96]: 21,340 of 30,060 seats
+      - generic [ref=f18e97]:
+        - generic [ref=f18e98]:
+          - generic [ref=f18e99]:
+            - generic [ref=f18e100]: Subscription revenue (₹ thousands)
+            - generic [ref=f18e101]: Last 12 months
+          - img [ref=f18e103]:
+            - 'generic "Dec: 412" [ref=f18e104]'
+            - generic [ref=f18e105]: Dec
+            - 'generic "Jan: 436" [ref=f18e106]'
+            - generic [ref=f18e107]: Jan
+            - 'generic "Feb: 451" [ref=f18e108]'
+            - generic [ref=f18e109]: Feb
+            - 'generic "Mar: 449" [ref=f18e110]'
+            - generic [ref=f18e111]: Mar
+            - 'generic "Apr: 478" [ref=f18e112]'
+            - generic [ref=f18e113]: Apr
+            - 'generic "May: 502" [ref=f18e114]'
+            - generic [ref=f18e115]: May
+            - 'generic "Jun: 515" [ref=f18e116]'
+            - generic [ref=f18e117]: Jun
+            - 'generic "Jul: 540" [ref=f18e118]'
+            - generic [ref=f18e119]: Jul
+            - 'generic "Aug: 561" [ref=f18e120]'
+            - generic [ref=f18e121]: Aug
+            - 'generic "Sep: 588" [ref=f18e122]'
+            - generic [ref=f18e123]: Sep
+            - 'generic "Oct: 612" [ref=f18e124]'
+            - generic [ref=f18e125]: Oct
+            - 'generic "Nov: 648" [ref=f18e126]'
+            - generic [ref=f18e127]: Nov
+        - generic [ref=f18e128]:
+          - generic [ref=f18e129]: Tenants by plan
+          - generic [ref=f18e131]:
+            - list [ref=f18e136]:
+              - listitem [ref=f18e137]:
+                - generic [ref=f18e139]: Starter
+                - generic [ref=f18e140]: 38 tenants
+                - generic [ref=f18e141]: 48%
+              - listitem [ref=f18e142]:
+                - generic [ref=f18e144]: Growth
+                - generic [ref=f18e145]: 31 tenants
+                - generic [ref=f18e146]: 39%
+              - listitem [ref=f18e147]:
+                - generic [ref=f18e149]: Pro
+                - generic [ref=f18e150]: 11 tenants
+                - generic [ref=f18e151]: 14%
+            - generic [ref=f18e152]: "Average revenue per tenant: ₹4,380"
+      - generic [ref=f18e153]:
+        - generic [ref=f18e154]:
+          - generic [ref=f18e155]:
+            - generic [ref=f18e156]: Student growth
+            - generic [ref=f18e157]: 12,480 total
+          - img [ref=f18e159]:
+            - 'generic "Dec: 7,420" [ref=f18e162]'
+            - generic [ref=f18e163]: Dec
+            - 'generic "Jan: 7,890" [ref=f18e164]'
+            - 'generic "Feb: 8,310" [ref=f18e165]'
+            - generic [ref=f18e166]: Feb
+            - 'generic "Mar: 8,620" [ref=f18e167]'
+            - 'generic "Apr: 9,040" [ref=f18e168]'
+            - generic [ref=f18e169]: Apr
+            - 'generic "May: 9,480" [ref=f18e170]'
+            - 'generic "Jun: 9,910" [ref=f18e171]'
+            - generic [ref=f18e172]: Jun
+            - 'generic "Jul: 10,420" [ref=f18e173]'
+            - 'generic "Aug: 10,980" [ref=f18e174]'
+            - generic [ref=f18e175]: Aug
+            - 'generic "Sep: 11,540" [ref=f18e176]'
+            - 'generic "Oct: 12,010" [ref=f18e177]'
+            - generic [ref=f18e178]: Oct
+            - 'generic "Nov: 12,480" [ref=f18e179]'
+            - generic [ref=f18e180]: Nov
+        - generic [ref=f18e181]:
+          - generic [ref=f18e182]:
+            - generic [ref=f18e183]: Subscriptions needing attention
+            - link "View all tenants" [ref=f18e184] [cursor=pointer]:
+              - /url: http://localhost:8765/tenants
+          - table [ref=f18e186]:
+            - rowgroup [ref=f18e187]:
+              - row [ref=f18e188]:
+                - columnheader "Library" [ref=f18e189]
+                - columnheader "Plan" [ref=f18e190]
+                - columnheader "Status" [ref=f18e191]
+                - columnheader "Detail" [ref=f18e192]
+            - rowgroup [ref=f18e193]:
+              - row [ref=f18e194]:
+                - cell "Lakshya Reading Hall Rina Kapadia" [ref=f18e195]:
+                  - generic [ref=f18e196]: Lakshya Reading Hall
+                  - generic [ref=f18e197]: Rina Kapadia
+                - cell "Starter" [ref=f18e198]
+                - cell "Expired" [ref=f18e199]
+                - cell "Expired 2 days ago" [ref=f18e201]
+              - row [ref=f18e202]:
+                - cell "Pustak Reading Lounge Kavita Joshi" [ref=f18e203]:
+                  - generic [ref=f18e204]: Pustak Reading Lounge
+                  - generic [ref=f18e205]: Kavita Joshi
+                - cell "Growth" [ref=f18e206]
+                - cell "Trial" [ref=f18e207]
+                - cell "Trial ends in 3 days" [ref=f18e209]
+              - row [ref=f18e210]:
+                - cell "Aspire Study Center Pooja Rana" [ref=f18e211]:
+                  - generic [ref=f18e212]: Aspire Study Center
+                  - generic [ref=f18e213]: Pooja Rana
+                - cell "Starter" [ref=f18e214]
+                - cell "Trial" [ref=f18e215]
+                - cell "Trial ends in 9 days" [ref=f18e217]
+              - row [ref=f18e218]:
+                - cell "Knowledge Point Harsh Mehta" [ref=f18e219]:
+                  - generic [ref=f18e220]: Knowledge Point
+                  - generic [ref=f18e221]: Harsh Mehta
+                - cell "Growth" [ref=f18e222]
+                - cell "Active" [ref=f18e223]
+                - cell "Renews in 12 days" [ref=f18e225]
+      - generic [ref=f18e226]:
+        - generic [ref=f18e227]: Recent activity
+        - list [ref=f18e229]:
+          - listitem [ref=f18e230]:
+            - generic [ref=f18e232]:
+              - generic [ref=f18e233]: Rina Kapadia’s plan expired
+              - generic [ref=f18e234]: Lakshya Reading Hall · Starter
+            - generic [ref=f18e235]: 12 min ago
+          - listitem [ref=f18e236]:
+            - generic [ref=f18e238]:
+              - generic [ref=f18e239]: New tenant registered
+              - generic [ref=f18e240]: Aspire Study Center started a 14-day trial
+            - generic [ref=f18e241]: 1 hr ago
+          - listitem [ref=f18e242]:
+            - generic [ref=f18e244]:
+              - generic [ref=f18e245]: Plan upgraded to Pro
+              - generic [ref=f18e246]: Elite Study Hub · ₹8,999 / month
+            - generic [ref=f18e247]: 3 hrs ago
+          - listitem [ref=f18e248]:
+            - generic [ref=f18e250]:
+              - generic [ref=f18e251]: Branch added
+              - generic [ref=f18e252]: Focus Study Zone · Infocity (FZ-INF)
+            - generic [ref=f18e253]: Yesterday, 6:40 PM
+          - listitem [ref=f18e254]:
+            - generic [ref=f18e256]:
+              - generic [ref=f18e257]: Tenant suspended
+              - generic [ref=f18e258]: Quiet Pages Library · overdue subscription
+            - generic [ref=f18e259]: Yesterday, 11:15 AM
+          - listitem [ref=f18e260]:
+            - generic [ref=f18e262]:
+              - generic [ref=f18e263]: Payment received
+              - generic [ref=f18e264]: Gyan Deep Library · ₹8,999
+            - generic [ref=f18e265]: 2 days ago
+          - listitem [ref=f18e266]:
+            - generic [ref=f18e268]:
+              - generic [ref=f18e269]: Hall marked for maintenance
+              - generic [ref=f18e270]: Focus Study Zone · Upper Floor Hall
+            - generic [ref=f18e271]: 2 days ago
