@@ -19,4 +19,24 @@ class Admin extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * SaaS admins only manage the platform-level modules: tenants and plans.
+     *
+     * @return array<int, string>
+     */
+    public function allowedModules(): array
+    {
+        return ['tenants', 'plans'];
+    }
+
+    public function canAccessModule(string $module): bool
+    {
+        return in_array($module, $this->allowedModules(), true);
+    }
+
+    public function canDo(string $module, string $action): bool
+    {
+        return $this->canAccessModule($module);
+    }
 }

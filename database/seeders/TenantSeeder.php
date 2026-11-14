@@ -28,12 +28,7 @@ class TenantSeeder extends Seeder
             ['name' => 'City Branch', 'code' => 'CITY'],
         ];
 
-        $roles = collect(['Admin', 'Librarian', 'Accountant'])
-            ->mapWithKeys(fn (string $name) => [
-                $name => Role::query()->firstOrCreate(
-                    ['tenant_id' => $tenant->id, 'name' => $name],
-                ),
-            ]);
+        $roles = Role::ensureDefaultsExist();
 
         $roleNames = ['Admin', 'Librarian', 'Accountant'];
 

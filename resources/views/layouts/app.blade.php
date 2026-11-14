@@ -12,21 +12,26 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 @php
-    $nav = [
-        ['Dashboard', 'dashboard', 'dashboard', 'dashboard'],
-        ['Tenants', 'tenants.index', 'tenants*', 'building'],
-        ['Plans', 'plans.index', 'plans*', 'tag'],
-        ['Branches', 'branches.index', 'branches*', 'pin'],
-        ['Halls', 'halls.index', 'halls*', 'grid'],
-        ['Staff', 'staff.index', 'staff*', 'users'],
-        ['Students', 'students.index', 'students*', 'cap'],
-    ];
-    $settings = [
-        ['Fee Structure', 'settings.fees'],
-        ['General Settings', 'settings.general'],
-        ['Roles & Permissions', 'settings.roles'],
-    ];
+    $currentPrincipal = auth()->guard('admin')->user() ?? auth()->guard('web')->user();
+    $can = fn (string $module) => $currentPrincipal?->canAccessModule($module) ?? false;
+
+    $nav = collect([
+        ['Dashboard', 'dashboard', 'dashboard', 'dashboard', null],
+        ['Tenants', 'tenants.index', 'tenants*', 'building', 'tenants'],
+        ['Plans', 'plans.index', 'plans*', 'tag', 'plans'],
+        ['Branches', 'branches.index', 'branches*', 'pin', 'branches'],
+        ['Halls', 'halls.index', 'halls*', 'grid', 'halls'],
+        ['Staff', 'staff.index', 'staff*', 'users', 'staff'],
+        ['Students', 'students.index', 'students*', 'cap', 'students'],
+    ])->filter(fn ($item) => $item[4] === null || $can($item[4]));
+
+    $settings = collect([
+        ['Fee Structure', 'settings.fees', 'fees'],
+        ['General Settings', 'settings.general', 'general'],
+        ['Roles & Permissions', 'settings.roles', 'roles'],
+    ])->filter(fn ($item) => $can($item[2]));
     $inSettings = request()->routeIs('settings.*');
+    $showSettings = $settings->isNotEmpty();
 @endphp
 <body>
 <div class="min-h-screen lg:pl-60">
@@ -44,6 +49,7 @@
                 </a>
             @endforeach
 
+            @if ($showSettings)
             <div data-collapse>
                 <button type="button" data-collapse-toggle class="nav-link w-full cursor-pointer {{ $inSettings ? 'active' : '' }}">
                     <x-icon name="cog" class="w-4 h-4 opacity-80" /> Settings
@@ -57,6 +63,7 @@
                     </div>
                 </div>
             </div>
+            @endif
         </nav>
         @php($currentUser = auth()->guard('admin')->user() ?? auth()->guard('web')->user())
         <div class="p-3 border-t border-white/10 relative" data-menu>

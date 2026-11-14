@@ -60,6 +60,7 @@ class TenantController extends Controller
             ]);
 
             $this->syncPlan($tenant, $data);
+            \App\Models\Role::ensureDefaultsExist();
             $this->logActivity($tenant, 'created', 'Tenant onboarded onto the platform.');
         });
 

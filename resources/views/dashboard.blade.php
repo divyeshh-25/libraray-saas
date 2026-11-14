@@ -23,10 +23,17 @@
         <h1 class="text-[22px] font-semibold tracking-tight mt-1">Good morning, Divyesh 👋</h1>
         <p class="text-muted mt-0.5">3 subscriptions need attention today. Everything else looks healthy.</p>
     </div>
+    @php $principal = auth()->guard('admin')->user() ?? auth()->guard('web')->user(); @endphp
     <div class="relative flex flex-wrap gap-2">
-        <a href="{{ route('students.create') }}" class="btn">New admission</a>
-        <a href="{{ route('branches.create') }}" class="btn">Add branch</a>
-        <a href="{{ route('tenants.create') }}" class="btn btn-primary"><x-icon name="plus" class="w-4 h-4" /> Add tenant</a>
+        @if ($principal?->canAccessModule('students'))
+            <a href="{{ route('students.create') }}" class="btn">New admission</a>
+        @endif
+        @if ($principal?->canAccessModule('branches'))
+            <a href="{{ route('branches.create') }}" class="btn">Add branch</a>
+        @endif
+        @if ($principal?->canAccessModule('tenants'))
+            <a href="{{ route('tenants.create') }}" class="btn btn-primary"><x-icon name="plus" class="w-4 h-4" /> Add tenant</a>
+        @endif
     </div>
 </div>
 

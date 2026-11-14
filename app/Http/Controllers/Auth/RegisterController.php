@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -37,7 +38,7 @@ class RegisterController extends Controller
                 'phone' => $data['phone'] ?? null,
             ]);
 
-            return User::create([
+            $user = User::create([
                 'tenant_id' => $tenant->id,
                 'name' => $data['name'],
                 'email' => $data['email'],
@@ -45,6 +46,10 @@ class RegisterController extends Controller
                 'password' => Hash::make($data['password']),
                 'user_type' => 'owner',
             ]);
+
+            Role::ensureDefaultsExist();
+
+            return $user;
         });
 
         Auth::guard('web')->login($user);

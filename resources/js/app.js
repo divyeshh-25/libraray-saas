@@ -242,12 +242,15 @@ $$('[data-table]').forEach((table) => {
 });
 
 /* ---------- Roles & permissions: pick a role, swap the matrix ---------- */
-$$('[data-role-pick]').forEach((btn) => {
+$$('[data-edit-pick]').forEach((btn) => {
     btn.addEventListener('click', () => {
-        $$('[data-role-pick]').forEach((b) => b.classList.toggle('!bg-brand-50', b === btn));
-        $$('[data-role-matrix]').forEach((m) => m.classList.toggle('hidden', m.dataset.roleMatrix !== btn.dataset.rolePick));
+        $$('[data-edit-panel]').forEach((p) => p.classList.toggle('hidden', p.dataset.editPanel !== btn.dataset.editPick));
     });
 });
+$$('[data-edit-cancel]').forEach((btn) => {
+    btn.addEventListener('click', () => $$('[data-edit-panel]').forEach((p) => p.classList.add('hidden')));
+});
+
 $$('[data-check-all]').forEach((cb) => {
     cb.addEventListener('change', () => {
         $$('input[type=checkbox]', cb.closest('tr')).forEach((c) => { c.checked = cb.checked; });
@@ -273,6 +276,8 @@ $$('[data-switch]').forEach((sw) => {
     sw.addEventListener('click', () => {
         const on = sw.getAttribute('aria-checked') !== 'true';
         sw.setAttribute('aria-checked', String(on));
+        const input = sw.previousElementSibling;
+        if (input && input.type === 'checkbox') input.checked = on;
     });
 });
 
