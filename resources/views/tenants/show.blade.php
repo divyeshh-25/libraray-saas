@@ -10,10 +10,14 @@
 <x-page-header :title="$t->library_name" :back="['Tenants', route('tenants.index')]">
     @if ($t->trashed())
         <span class="badge badge-muted">Archived</span>
-        <button type="button" class="btn btn-primary" data-restore-url="{{ route('tenants.restore', $t->id) }}" data-redirect="{{ route('tenants.index') }}"><x-icon name="restore" class="w-4 h-4" /> Restore</button>
+        @canDo('tenants', 'delete')
+            <button type="button" class="btn btn-primary" data-restore-url="{{ route('tenants.restore', $t->id) }}" data-redirect="{{ route('tenants.index') }}"><x-icon name="restore" class="w-4 h-4" /> Restore</button>
+        @endcanDo
     @else
         <button class="btn" data-toast="Invitation resent (demo)">Resend invite</button>
-        <a href="{{ route('tenants.edit', $t->id) }}" class="btn btn-primary">Edit tenant</a>
+        @canDo('tenants', 'update')
+            <a href="{{ route('tenants.edit', $t->id) }}" class="btn btn-primary">Edit tenant</a>
+        @endcanDo
     @endif
 </x-page-header>
 

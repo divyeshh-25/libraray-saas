@@ -2,8 +2,12 @@
 @section('title', 'Plans')
 @section('content')
 <x-page-header title="Plans" subtitle="Subscription tiers offered to libraries">
-    <a href="{{ route('plans.archived') }}" class="btn" title="Archived plans"><x-icon name="archive" class="w-4 h-4" /> Archive</a>
-    <a href="{{ route('plans.create') }}" class="btn btn-primary"><x-icon name="plus" class="w-4 h-4" /> Add plan</a>
+    @canDo('plans', 'delete')
+        <a href="{{ route('plans.archived') }}" class="btn" title="Archived plans"><x-icon name="archive" class="w-4 h-4" /> Archive</a>
+    @endcanDo
+    @canDo('plans', 'add')
+        <a href="{{ route('plans.create') }}" class="btn btn-primary"><x-icon name="plus" class="w-4 h-4" /> Add plan</a>
+    @endcanDo
 </x-page-header>
 
 <div class="grid md:grid-cols-3 gap-4 mb-4">
@@ -40,7 +44,7 @@
                         <td class="text-right">{{ $p->max_students ? number_format($p->max_students) : '—' }}</td>
                         <td class="text-right">{{ $p->tenants_count }}</td>
                         <td><x-badge :status="$p->status" /></td>
-                        <td class="text-right"><x-row-actions :view="route('plans.show', $p->id)" :edit="route('plans.edit', $p->id)" :delete="route('plans.destroy', $p->id)" delete-label="Archive" :label="$p->name.' plan'" /></td>
+                        <td class="text-right"><x-row-actions :view="route('plans.show', $p->id)" :edit="viewer_can('plans', 'update') ? route('plans.edit', $p->id) : null" :delete="viewer_can('plans', 'delete') ? route('plans.destroy', $p->id) : null" delete-label="Archive" :label="$p->name.' plan'" /></td>
                     </tr>
                 @endforeach
                 <x-empty-row :cols="8" message="No plans found." />

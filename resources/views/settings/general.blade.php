@@ -78,7 +78,9 @@
             </ul>
         </div>
 
-        <x-form-actions :cancel="route('dashboard')" save="Save settings" submit />
+        @canDo('general', 'update')
+            <x-form-actions :cancel="route('dashboard')" save="Save settings" submit />
+        @endcanDo
     </form>
 </div>
 @endsection

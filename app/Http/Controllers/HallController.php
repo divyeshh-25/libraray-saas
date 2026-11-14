@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\ScopesToViewer;
 use App\Models\Branch;
 use App\Models\Hall;
 use Illuminate\Http\JsonResponse;
@@ -11,15 +12,16 @@ use Illuminate\View\View;
 
 class HallController extends Controller
 {
+    use ScopesToViewer;
+
     public function index(): View
     {
-        $halls = Hall::query()
+        $halls = $this->scopeThroughBranch(Hall::query())
             ->with('branch.tenant')
             ->latest()
             ->get();
 
-        $branches = Branch::with('tenant')->orderBy('name')->get()
-            ->map(fn (Branch $b) => $b->name);
+        $branches = $this->visibleBranches()->map(fn (Branch $b) => $b->name);
 
         return view('halls.index', compact('halls', 'branches'));
     }
@@ -50,7 +52,7 @@ class HallController extends Controller
 
     public function show(int $id): View
     {
-        $hall = Hall::withTrashed()->with('branch.tenant')->findOrFail($id);
+        $hall = $this->scopeThroughBranch(Hall::withTrashed())->with('branch.tenant')->findOrFail($id);
 
         $seats = ($hall->rows ?? 0) * ($hall->cols ?? 0);
 
@@ -59,7 +61,7 @@ class HallController extends Controller
 
     public function edit(int $id): View
     {
-        $hall = Hall::findOrFail($id);
+        $hall = $this->scopeThroughBranch(Hall::query())->findOrFail($id);
         $branches = $this->branchOptions();
 
         return view('halls.form', ['mode' => 'edit', 'hall' => $hall, 'branches' => $branches]);
@@ -67,7 +69,7 @@ class HallController extends Controller
 
     public function update(Request $request, int $id): RedirectResponse
     {
-        $hall = Hall::findOrFail($id);
+        $hall = $this->scopeThroughBranch(Hall::query())->findOrFail($id);
         $data = $this->validateData($request);
 
         $hall->update([
@@ -85,7 +87,7 @@ class HallController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        $hall = Hall::findOrFail($id);
+        $hall = $this->scopeThroughBranch(Hall::query())->findOrFail($id);
         $hall->delete();
 
         return response()->json(['message' => 'Hall archived.']);
@@ -93,7 +95,7 @@ class HallController extends Controller
 
     public function archived(): View
     {
-        $halls = Hall::onlyTrashed()
+        $halls = $this->scopeThroughBranch(Hall::onlyTrashed())
             ->with('branch.tenant')
             ->latest('deleted_at')
             ->get();
@@ -103,10 +105,18 @@ class HallController extends Controller
 
     public function restore(int $id): JsonResponse
     {
-        $hall = Hall::onlyTrashed()->findOrFail($id);
+        $hall = $this->scopeThroughBranch(Hall::onlyTrashed())->findOrFail($id);
         $hall->restore();
 
         return response()->json(['message' => 'Hall restored.']);
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection<int, Branch>
+     */
+    private function visibleBranches()
+    {
+        return $this->scopeBranchRow(Branch::query())->orderBy('name')->get();
     }
 
     /**
@@ -114,14 +124,14 @@ class HallController extends Controller
      */
     private function branchOptions()
     {
-        return Branch::orderBy('name')->get()->map(fn (Branch $b) => "{$b->name} ({$b->code})");
+        return $this->visibleBranches()->map(fn (Branch $b) => "{$b->name} ({$b->code})");
     }
 
     private function resolveBranchId(string $label): int
     {
         $code = preg_match('/\(([^)]+)\)$/', $label, $m) ? $m[1] : $label;
 
-        return Branch::where('code', $code)->firstOrFail()->id;
+        return $this->scopeBranchRow(Branch::where('code', $code))->firstOrFail()->id;
     }
 
     /**

@@ -2,7 +2,9 @@
 @section('title', 'Roles & Permissions')
 @section('content')
 <x-page-header title="Roles & Permissions" subtitle="Control what each role can see and do">
-    <label for="role-form-toggle" class="btn btn-primary"><x-icon name="plus" class="w-4 h-4" /> New role</label>
+    @canDo('roles', 'add')
+        <label for="role-form-toggle" class="btn btn-primary"><x-icon name="plus" class="w-4 h-4" /> New role</label>
+    @endcanDo
 </x-page-header>
 
 @if ($errors->any())
@@ -15,6 +17,7 @@
     </div>
 @endif
 
+@canDo('roles', 'add')
 <input type="checkbox" id="role-form-toggle" class="peer hidden">
 <form class="card mb-4 hidden peer-checked:block" method="POST" action="{{ route('settings.roles.store') }}">
     @csrf
@@ -28,25 +31,30 @@
         <button type="submit" class="btn btn-primary">Create role</button>
     </div>
 </form>
+@endcanDo
 
 <div class="flex flex-wrap gap-4 mb-4">
     @foreach ($roles as $r)
         <div class="card p-4 w-64 border-l-4 {{ $selectedRole?->id === $r->id ? 'border-brand-500' : 'border-line' }}">
             <div class="flex items-center justify-between">
                 <span class="font-semibold">{{ $r->name }}</span>
-                @unless ($r->is_system)
+                @if (! $r->is_system && (viewer_can('roles', 'update') || viewer_can('roles', 'delete')))
                 <div class="relative inline-block" data-menu>
                     <button type="button" class="btn btn-sm !px-1.5 !border-transparent" data-menu-toggle aria-label="Actions"><x-icon name="dots" class="w-4 h-4 text-muted" /></button>
                     <div class="menu">
-                        <button type="button" data-edit-pick="{{ $r->id }}">Edit</button>
+                        @canDo('roles', 'update')
+                            <button type="button" data-edit-pick="{{ $r->id }}">Edit</button>
+                        @endcanDo
+                        @canDo('roles', 'delete')
                         <form method="POST" action="{{ route('settings.roles.destroy', $r->id) }}" onsubmit="return confirm('Delete {{ $r->name }}? Staff assigned to this role will lose it.')">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="!text-red-700">Delete</button>
                         </form>
+                        @endcanDo
                     </div>
                 </div>
-                @endunless
+                @endif
             </div>
             <div class="mt-3 text-[13px] flex items-center justify-between">
                 <span class="text-muted">Permission</span>
@@ -60,6 +68,7 @@
     @endforeach
 </div>
 
+@canDo('roles', 'update')
 @foreach ($roles as $r)
     @unless ($r->is_system)
         <form class="card mb-4 hidden" data-edit-panel="{{ $r->id }}" method="POST" action="{{ route('settings.roles.update', $r->id) }}">
@@ -77,6 +86,7 @@
         </form>
     @endunless
 @endforeach
+@endcanDo
 
 @if ($selectedRole)
     @php $granted = $selectedRole->permissions->pluck('id')->all(); @endphp
@@ -101,7 +111,7 @@
                                     @php $perm = $perms->firstWhere('action', $a); @endphp
                                     <td class="text-center">
                                         @if ($perm)
-                                            <input type="checkbox" name="permissions[]" value="{{ $perm->id }}" class="accent-brand-600 w-4 h-4" @checked(in_array($perm->id, $granted))>
+                                            <input type="checkbox" name="permissions[]" value="{{ $perm->id }}" class="accent-brand-600 w-4 h-4" @checked(in_array($perm->id, $granted)) @disabled(! viewer_can('roles', 'update'))>
                                         @endif
                                     </td>
                                 @endforeach
@@ -110,7 +120,9 @@
                     </tbody>
                 </table>
             </div>
-            <div class="px-5 py-3 flex justify-end"><button class="btn btn-primary btn-sm">Save</button></div>
+            @canDo('roles', 'update')
+                <div class="px-5 py-3 flex justify-end"><button class="btn btn-primary btn-sm">Save</button></div>
+            @endcanDo
         </form>
     </div>
 @endif

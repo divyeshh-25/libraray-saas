@@ -2,8 +2,12 @@
 @section('title', 'Branches')
 @section('content')
 <x-page-header title="Branches" subtitle="Physical locations run by each library">
-    <a href="{{ route('branches.archived') }}" class="btn" title="Archived branches"><x-icon name="archive" class="w-4 h-4" /> Archive</a>
-    <a href="{{ route('branches.create') }}" class="btn btn-primary"><x-icon name="plus" class="w-4 h-4" /> Add branch</a>
+    @canDo('branches', 'delete')
+        <a href="{{ route('branches.archived') }}" class="btn" title="Archived branches"><x-icon name="archive" class="w-4 h-4" /> Archive</a>
+    @endcanDo
+    @canDo('branches', 'add')
+        <a href="{{ route('branches.create') }}" class="btn btn-primary"><x-icon name="plus" class="w-4 h-4" /> Add branch</a>
+    @endcanDo
 </x-page-header>
 <div class="card">
     <x-toolbar target="branches" placeholder="Search by branch, code or library" :filters="[
@@ -24,7 +28,7 @@
                         <td class="text-right">{{ $b->seats_count }}</td>
                         <td class="text-right">{{ $b->students_count }}</td>
                         <td><x-badge :status="$b->status" /></td>
-                        <td class="text-right"><x-row-actions :view="route('branches.show', $b->id)" :edit="route('branches.edit', $b->id)" :delete="route('branches.destroy', $b->id)" delete-label="Archive" :label="$b->name.' branch'" /></td>
+                        <td class="text-right"><x-row-actions :view="route('branches.show', $b->id)" :edit="viewer_can('branches', 'update') ? route('branches.edit', $b->id) : null" :delete="viewer_can('branches', 'delete') ? route('branches.destroy', $b->id) : null" delete-label="Archive" :label="$b->name.' branch'" /></td>
                     </tr>
                 @endforeach
                 <x-empty-row :cols="8" message="No branches match your filters." />

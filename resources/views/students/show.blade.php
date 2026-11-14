@@ -9,10 +9,14 @@
 <x-page-header :title="$s->user->name" :subtitle="$s->student_code.' · Admitted '.($s->admission_date?->format('d M Y') ?? '—')" :back="['Students', route('students.index')]">
     @if ($s->trashed())
         <span class="badge badge-muted">Archived</span>
-        <button type="button" class="btn btn-primary" data-restore-url="{{ route('students.restore', $s->id) }}" data-redirect="{{ route('students.index') }}"><x-icon name="restore" class="w-4 h-4" /> Restore</button>
+        @canDo('students', 'delete')
+            <button type="button" class="btn btn-primary" data-restore-url="{{ route('students.restore', $s->id) }}" data-redirect="{{ route('students.index') }}"><x-icon name="restore" class="w-4 h-4" /> Restore</button>
+        @endcanDo
     @else
         <button class="btn" data-toast="Receipt sent (demo)">Collect fee</button>
-        <a href="{{ route('students.edit', $s->id) }}" class="btn btn-primary">Edit student</a>
+        @canDo('students', 'update')
+            <a href="{{ route('students.edit', $s->id) }}" class="btn btn-primary">Edit student</a>
+        @endcanDo
     @endif
 </x-page-header>
 

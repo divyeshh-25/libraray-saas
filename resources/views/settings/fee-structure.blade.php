@@ -2,8 +2,12 @@
 @section('title', 'Fee Structure')
 @section('content')
 <x-page-header title="Fee Structure" subtitle="Pricing per branch, shift and duration">
-    <a href="{{ route('settings.fees.archived') }}" class="btn" title="Archived fee structures"><x-icon name="archive" class="w-4 h-4" /> Archive</a>
-    <label for="fee-form-toggle" class="btn btn-primary"><x-icon name="plus" class="w-4 h-4" /> Add fee</label>
+    @canDo('fees', 'delete')
+        <a href="{{ route('settings.fees.archived') }}" class="btn" title="Archived fee structures"><x-icon name="archive" class="w-4 h-4" /> Archive</a>
+    @endcanDo
+    @canDo('fees', 'add')
+        <label for="fee-form-toggle" class="btn btn-primary"><x-icon name="plus" class="w-4 h-4" /> Add fee</label>
+    @endcanDo
 </x-page-header>
 
 @if ($errors->any())
@@ -16,6 +20,7 @@
     </div>
 @endif
 
+@canDo('fees', 'add')
 <input type="checkbox" id="fee-form-toggle" class="peer hidden" @checked($errors->any())>
 <form class="card mb-4 hidden peer-checked:block" method="POST" action="{{ route('settings.fees.store') }}">
     @csrf
@@ -32,6 +37,7 @@
         <button type="submit" class="btn btn-primary">Save fee</button>
     </div>
 </form>
+@endcanDo
 
 <div class="card">
     <x-toolbar target="fees" placeholder="Search fee structures" :filters="[
@@ -50,7 +56,7 @@
                         <td>{{ ucfirst($f->duration_type) }}</td>
                         <td class="text-right">₹{{ number_format($f->amount) }}</td>
                         <td><x-badge :status="$f->status" /></td>
-                        <td class="text-right"><x-row-actions :edit="route('settings.fees.edit', $f->id)" :delete="route('settings.fees.destroy', $f->id)" delete-label="Archive" :label="$f->name" /></td>
+                        <td class="text-right"><x-row-actions :edit="viewer_can('fees', 'update') ? route('settings.fees.edit', $f->id) : null" :delete="viewer_can('fees', 'delete') ? route('settings.fees.destroy', $f->id) : null" delete-label="Archive" :label="$f->name" /></td>
                     </tr>
                 @endforeach
                 <x-empty-row :cols="7" message="No fee structures found." />

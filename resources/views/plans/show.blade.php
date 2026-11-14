@@ -4,9 +4,13 @@
 <x-page-header :title="$plan->name" :back="['Plans', route('plans.index')]">
     @if ($plan->trashed())
         <span class="badge badge-muted">Archived</span>
-        <button type="button" class="btn btn-primary" data-restore-url="{{ route('plans.restore', $plan->id) }}" data-redirect="{{ route('plans.index') }}"><x-icon name="restore" class="w-4 h-4" /> Restore</button>
+        @canDo('plans', 'delete')
+            <button type="button" class="btn btn-primary" data-restore-url="{{ route('plans.restore', $plan->id) }}" data-redirect="{{ route('plans.index') }}"><x-icon name="restore" class="w-4 h-4" /> Restore</button>
+        @endcanDo
     @else
-        <a href="{{ route('plans.edit', $plan->id) }}" class="btn btn-primary">Edit plan</a>
+        @canDo('plans', 'update')
+            <a href="{{ route('plans.edit', $plan->id) }}" class="btn btn-primary">Edit plan</a>
+        @endcanDo
     @endif
 </x-page-header>
 

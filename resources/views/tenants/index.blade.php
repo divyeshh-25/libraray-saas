@@ -2,9 +2,13 @@
 @section('title', 'Tenants')
 @section('content')
 <x-page-header title="Tenants" subtitle="Libraries that subscribe to the platform">
-    <a href="{{ route('tenants.archived') }}" class="btn" title="Archived libraries"><x-icon name="archive" class="w-4 h-4" /> Archive</a>
+    @canDo('tenants', 'delete')
+        <a href="{{ route('tenants.archived') }}" class="btn" title="Archived libraries"><x-icon name="archive" class="w-4 h-4" /> Archive</a>
+    @endcanDo
     <button class="btn" data-toast="Export started (demo)">Export</button>
-    <a href="{{ route('tenants.create') }}" class="btn btn-primary"><x-icon name="plus" class="w-4 h-4" /> Add tenant</a>
+    @canDo('tenants', 'add')
+        <a href="{{ route('tenants.create') }}" class="btn btn-primary"><x-icon name="plus" class="w-4 h-4" /> Add tenant</a>
+    @endcanDo
 </x-page-header>
 
 <div class="card">
@@ -32,7 +36,7 @@
                         <td class="text-right">{{ $t->branches_count }}</td>
                         <td class="text-right">{{ number_format($t->students_count) }}</td>
                         <td class="text-muted whitespace-nowrap">{{ $t->created_at->format('d M Y') }}</td>
-                        <td class="text-right"><x-row-actions :view="route('tenants.show', $t->id)" :edit="route('tenants.edit', $t->id)" :delete="route('tenants.destroy', $t->id)" delete-label="Archive" :label="$t->library_name" :extra="['Suspend']" /></td>
+                        <td class="text-right"><x-row-actions :view="route('tenants.show', $t->id)" :edit="viewer_can('tenants', 'update') ? route('tenants.edit', $t->id) : null" :delete="viewer_can('tenants', 'delete') ? route('tenants.destroy', $t->id) : null" delete-label="Archive" :label="$t->library_name" :extra="['Suspend']" /></td>
                     </tr>
                 @endforeach
                 <x-empty-row :cols="8" message="No tenants match your filters." />

@@ -7,9 +7,13 @@
 <x-page-header :title="$hall->name" :subtitle="$hall->branch?->tenant?->library_name.' · '.$hall->branch?->name" :back="['Halls', route('halls.index')]">
     @if ($hall->trashed())
         <span class="badge badge-muted">Archived</span>
-        <button type="button" class="btn btn-primary" data-restore-url="{{ route('halls.restore', $hall->id) }}" data-redirect="{{ route('halls.index') }}"><x-icon name="restore" class="w-4 h-4" /> Restore</button>
+        @canDo('halls', 'delete')
+            <button type="button" class="btn btn-primary" data-restore-url="{{ route('halls.restore', $hall->id) }}" data-redirect="{{ route('halls.index') }}"><x-icon name="restore" class="w-4 h-4" /> Restore</button>
+        @endcanDo
     @else
-        <a href="{{ route('halls.edit', $hall->id) }}" class="btn btn-primary">Edit hall</a>
+        @canDo('halls', 'update')
+            <a href="{{ route('halls.edit', $hall->id) }}" class="btn btn-primary">Edit hall</a>
+        @endcanDo
     @endif
 </x-page-header>
 

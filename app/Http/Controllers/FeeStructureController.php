@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\ScopesToViewer;
 use App\Models\Branch;
 use App\Models\FeeStructure;
 use App\Models\Shift;
@@ -12,18 +13,20 @@ use Illuminate\View\View;
 
 class FeeStructureController extends Controller
 {
+    use ScopesToViewer;
+
     public function index(): View
     {
-        $fees = FeeStructure::query()->with(['branch', 'shift'])->latest()->get();
-        $branches = Branch::orderBy('name')->pluck('name');
+        $fees = $this->scopeThroughBranch(FeeStructure::query())->with(['branch', 'shift'])->latest()->get();
+        $branches = $this->scopeBranchRow(Branch::query())->orderBy('name')->pluck('name');
 
         return view('settings.fee-structure', compact('fees', 'branches'));
     }
 
     public function edit(int $id): View
     {
-        $fee = FeeStructure::with(['branch', 'shift'])->findOrFail($id);
-        $branches = Branch::orderBy('name')->pluck('name');
+        $fee = $this->scopeThroughBranch(FeeStructure::query())->with(['branch', 'shift'])->findOrFail($id);
+        $branches = $this->scopeBranchRow(Branch::query())->orderBy('name')->pluck('name');
 
         return view('settings.fee-structure-edit', compact('fee', 'branches'));
     }
@@ -46,7 +49,7 @@ class FeeStructureController extends Controller
 
     public function update(Request $request, int $id): RedirectResponse
     {
-        $fee = FeeStructure::findOrFail($id);
+        $fee = $this->scopeThroughBranch(FeeStructure::query())->findOrFail($id);
         $data = $this->validateData($request);
 
         $fee->update([
@@ -62,28 +65,28 @@ class FeeStructureController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        FeeStructure::findOrFail($id)->delete();
+        $this->scopeThroughBranch(FeeStructure::query())->findOrFail($id)->delete();
 
         return response()->json(['message' => 'Fee structure archived.']);
     }
 
     public function archived(): View
     {
-        $fees = FeeStructure::onlyTrashed()->with(['branch', 'shift'])->latest('deleted_at')->get();
+        $fees = $this->scopeThroughBranch(FeeStructure::onlyTrashed())->with(['branch', 'shift'])->latest('deleted_at')->get();
 
         return view('settings.fee-structure-archived', compact('fees'));
     }
 
     public function restore(int $id): JsonResponse
     {
-        FeeStructure::onlyTrashed()->findOrFail($id)->restore();
+        $this->scopeThroughBranch(FeeStructure::onlyTrashed())->findOrFail($id)->restore();
 
         return response()->json(['message' => 'Fee structure restored.']);
     }
 
     private function resolveBranchId(string $name): int
     {
-        return Branch::where('name', $name)->firstOrFail()->id;
+        return $this->scopeBranchRow(Branch::where('name', $name))->firstOrFail()->id;
     }
 
     private function resolveShiftId(string $branchName, string $shiftName): int

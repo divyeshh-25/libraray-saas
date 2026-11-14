@@ -14,11 +14,15 @@ class EnsureModuleAccess
      *
      * @param  Closure(Request): (Response)  $next
      */
-    public function handle(Request $request, Closure $next, string $module): Response
+    public function handle(Request $request, Closure $next, string $module, string $action = 'view'): Response
     {
         $user = Auth::guard('admin')->user() ?? Auth::guard('web')->user();
 
-        abort_unless($user?->canAccessModule($module), 403);
+        $allowed = $action === 'view'
+            ? $user?->canAccessModule($module)
+            : $user?->canDo($module, $action);
+
+        abort_unless($allowed, 403);
 
         return $next($request);
     }

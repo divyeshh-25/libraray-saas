@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\ScopesToViewer;
 use App\Models\Branch;
 use App\Models\Role;
 use App\Models\Staff;
@@ -16,9 +17,11 @@ use Illuminate\View\View;
 
 class StaffController extends Controller
 {
+    use ScopesToViewer;
+
     public function index(): View
     {
-        $staff = Staff::query()->with(['user.branch', 'roles'])->latest()->get();
+        $staff = $this->scopeThroughUser(Staff::query())->with(['user.branch', 'roles'])->latest()->get();
 
         return view('staff.index', compact('staff'));
     }
@@ -34,7 +37,7 @@ class StaffController extends Controller
 
         DB::transaction(function () use ($data) {
             $user = User::create([
-                'tenant_id' => Auth::user()->tenant_id ?? Branch::where('name', $this->branchName($data['branch']))->first()?->tenant_id,
+                'tenant_id' => Auth::user()->tenant_id,
                 'branch_id' => $this->resolveBranchId($data['branch']),
                 'name' => $data['name'],
                 'email' => $data['email'],
@@ -63,14 +66,14 @@ class StaffController extends Controller
 
     public function edit(int $id): View
     {
-        $staff = Staff::with(['user', 'roles'])->findOrFail($id);
+        $staff = $this->scopeThroughUser(Staff::query())->with(['user', 'roles'])->findOrFail($id);
 
         return view('staff.form', ['mode' => 'edit', 'staff' => $staff] + $this->options());
     }
 
     public function update(Request $request, int $id): RedirectResponse
     {
-        $staff = Staff::with('user')->findOrFail($id);
+        $staff = $this->scopeThroughUser(Staff::query())->with('user')->findOrFail($id);
         $data = $this->validateData($request, false);
 
         DB::transaction(function () use ($staff, $data) {
@@ -100,21 +103,21 @@ class StaffController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        Staff::findOrFail($id)->delete();
+        $this->scopeThroughUser(Staff::query())->findOrFail($id)->delete();
 
         return response()->json(['message' => 'Staff member archived.']);
     }
 
     public function archived(): View
     {
-        $staff = Staff::onlyTrashed()->with(['user.branch', 'roles'])->latest('deleted_at')->get();
+        $staff = $this->scopeThroughUser(Staff::onlyTrashed())->with(['user.branch', 'roles'])->latest('deleted_at')->get();
 
         return view('staff.archived', compact('staff'));
     }
 
     public function restore(int $id): JsonResponse
     {
-        Staff::onlyTrashed()->findOrFail($id)->restore();
+        $this->scopeThroughUser(Staff::onlyTrashed())->findOrFail($id)->restore();
 
         return response()->json(['message' => 'Staff member restored.']);
     }
@@ -125,21 +128,16 @@ class StaffController extends Controller
     private function options(): array
     {
         return [
-            'branches' => Branch::orderBy('name')->get()->map(fn (Branch $b) => "{$b->name} ({$b->code})"),
+            'branches' => $this->scopeBranchRow(Branch::query())->orderBy('name')->get()->map(fn (Branch $b) => "{$b->name} ({$b->code})"),
             'roles' => Role::orderBy('name')->pluck('name')->unique()->values(),
         ];
-    }
-
-    private function branchName(string $label): string
-    {
-        return preg_match('/^(.*?)\s*\(/', $label, $m) ? trim($m[1]) : $label;
     }
 
     private function resolveBranchId(string $label): ?int
     {
         $code = preg_match('/\(([^)]+)\)$/', $label, $m) ? $m[1] : null;
 
-        return $code ? Branch::where('code', $code)->first()?->id : null;
+        return $code ? $this->scopeBranchRow(Branch::where('code', $code))->first()?->id : null;
     }
 
     /**

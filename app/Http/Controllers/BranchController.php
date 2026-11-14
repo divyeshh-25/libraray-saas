@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\ScopesToViewer;
 use App\Models\Branch;
 use App\Models\Tenant;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class BranchController extends Controller
 {
+    use ScopesToViewer;
+
     public function index(): View
     {
-        $branches = Branch::query()
+        $branches = $this->scopeBranchRow(Branch::query())
             ->with('tenant')
             ->withCount(['users as students_count' => fn ($q) => $q->where('user_type', 'student')])
             ->latest()
@@ -26,15 +30,16 @@ class BranchController extends Controller
                 return $branch;
             });
 
-        $tenants = Tenant::orderBy('library_name')->pluck('library_name');
-        $cities = Tenant::whereNotNull('city')->distinct()->orderBy('city')->pluck('city');
+        $tenant = Tenant::find($this->viewerTenantId());
+        $tenants = collect([$tenant->library_name]);
+        $cities = Tenant::where('id', $this->viewerTenantId())->whereNotNull('city')->pluck('city');
 
         return view('branches.index', compact('branches', 'tenants', 'cities'));
     }
 
     public function create(): View
     {
-        $tenants = Tenant::orderBy('library_name')->pluck('library_name');
+        $tenants = collect([Tenant::find($this->viewerTenantId())->library_name]);
 
         return view('branches.form', ['mode' => 'create', 'tenants' => $tenants]);
     }
@@ -44,7 +49,7 @@ class BranchController extends Controller
         $data = $this->validateData($request);
 
         Branch::create([
-            'tenant_id' => Tenant::where('library_name', $data['tenant'])->first()->id,
+            'tenant_id' => Auth::user()->tenant_id,
             'name' => $data['name'],
             'code' => $data['code'],
             'city' => $data['city'] ?? null,
@@ -61,7 +66,7 @@ class BranchController extends Controller
 
     public function show(int $id): View
     {
-        $branch = Branch::withTrashed()
+        $branch = $this->scopeBranchRow(Branch::withTrashed())
             ->with('tenant')
             ->withCount(['users as students_count' => fn ($q) => $q->where('user_type', 'student')])
             ->findOrFail($id);
@@ -75,19 +80,18 @@ class BranchController extends Controller
 
     public function edit(int $id): View
     {
-        $branch = Branch::findOrFail($id);
-        $tenants = Tenant::orderBy('library_name')->pluck('library_name');
+        $branch = $this->scopeBranchRow(Branch::query())->findOrFail($id);
+        $tenants = collect([Tenant::find($this->viewerTenantId())->library_name]);
 
         return view('branches.form', ['mode' => 'edit', 'branch' => $branch, 'tenants' => $tenants]);
     }
 
     public function update(Request $request, int $id): RedirectResponse
     {
-        $branch = Branch::findOrFail($id);
+        $branch = $this->scopeBranchRow(Branch::query())->findOrFail($id);
         $data = $this->validateData($request);
 
         $branch->update([
-            'tenant_id' => Tenant::where('library_name', $data['tenant'])->first()->id,
             'name' => $data['name'],
             'code' => $data['code'],
             'city' => $data['city'] ?? null,
@@ -104,7 +108,7 @@ class BranchController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        $branch = Branch::findOrFail($id);
+        $branch = $this->scopeBranchRow(Branch::query())->findOrFail($id);
         $branch->delete();
 
         return response()->json(['message' => 'Branch archived.']);
@@ -112,7 +116,7 @@ class BranchController extends Controller
 
     public function archived(): View
     {
-        $branches = Branch::onlyTrashed()
+        $branches = $this->scopeBranchRow(Branch::onlyTrashed())
             ->with('tenant')
             ->latest('deleted_at')
             ->get();
@@ -122,7 +126,7 @@ class BranchController extends Controller
 
     public function restore(int $id): JsonResponse
     {
-        $branch = Branch::onlyTrashed()->findOrFail($id);
+        $branch = $this->scopeBranchRow(Branch::onlyTrashed())->findOrFail($id);
         $branch->restore();
 
         return response()->json(['message' => 'Branch restored.']);

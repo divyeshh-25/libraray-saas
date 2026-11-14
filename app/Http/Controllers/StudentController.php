@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\ScopesToViewer;
 use App\Models\Branch;
 use App\Models\Student;
 use App\Models\User;
@@ -15,9 +16,11 @@ use Illuminate\View\View;
 
 class StudentController extends Controller
 {
+    use ScopesToViewer;
+
     public function index(): View
     {
-        $students = Student::query()->with('user.branch')->latest()->get();
+        $students = $this->scopeThroughUser(Student::query())->with('user.branch')->latest()->get();
 
         return view('students.index', compact('students'));
     }
@@ -63,7 +66,7 @@ class StudentController extends Controller
 
     public function show(int $id): View
     {
-        $student = Student::withTrashed()->with('user.branch')->findOrFail($id);
+        $student = $this->scopeThroughUser(Student::withTrashed())->with('user.branch')->findOrFail($id);
         $attendances = $student->attendances()->latest('attendance_date')->take(28)->get();
         $invoices = $student->invoices()->latest('invoice_date')->take(6)->get();
 
@@ -72,14 +75,14 @@ class StudentController extends Controller
 
     public function edit(int $id): View
     {
-        $student = Student::with('user.branch')->findOrFail($id);
+        $student = $this->scopeThroughUser(Student::query())->with('user.branch')->findOrFail($id);
 
         return view('students.form', ['mode' => 'edit', 'student' => $student, 'branches' => $this->branchOptions()]);
     }
 
     public function update(Request $request, int $id): RedirectResponse
     {
-        $student = Student::with('user')->findOrFail($id);
+        $student = $this->scopeThroughUser(Student::query())->with('user')->findOrFail($id);
         $data = $this->validateData($request, false);
 
         DB::transaction(function () use ($student, $data) {
@@ -109,21 +112,21 @@ class StudentController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        Student::findOrFail($id)->delete();
+        $this->scopeThroughUser(Student::query())->findOrFail($id)->delete();
 
         return response()->json(['message' => 'Student archived.']);
     }
 
     public function archived(): View
     {
-        $students = Student::onlyTrashed()->with('user.branch')->latest('deleted_at')->get();
+        $students = $this->scopeThroughUser(Student::onlyTrashed())->with('user.branch')->latest('deleted_at')->get();
 
         return view('students.archived', compact('students'));
     }
 
     public function restore(int $id): JsonResponse
     {
-        Student::onlyTrashed()->findOrFail($id)->restore();
+        $this->scopeThroughUser(Student::onlyTrashed())->findOrFail($id)->restore();
 
         return response()->json(['message' => 'Student restored.']);
     }
@@ -133,7 +136,7 @@ class StudentController extends Controller
      */
     private function branchOptions()
     {
-        return Branch::orderBy('name')->get()->map(fn (Branch $b) => "{$b->name} ({$b->code})");
+        return $this->scopeBranchRow(Branch::query())->orderBy('name')->get()->map(fn (Branch $b) => "{$b->name} ({$b->code})");
     }
 
     private function resolveBranchId(?string $label): ?int
@@ -144,7 +147,7 @@ class StudentController extends Controller
 
         $code = preg_match('/\(([^)]+)\)$/', $label, $m) ? $m[1] : null;
 
-        return $code ? Branch::where('code', $code)->first()?->id : null;
+        return $code ? $this->scopeBranchRow(Branch::where('code', $code))->first()?->id : null;
     }
 
     private function parseFee(?string $label): ?float

@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             PlanSeeder::class,
             PermissionSeeder::class,
-            TenantSeeder::class,
+            // TenantSeeder::class,
             ShiftSeeder::class,
         ]);
     }

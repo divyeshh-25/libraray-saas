@@ -2,8 +2,12 @@
 @section('title', 'Staff')
 @section('content')
 <x-page-header title="Staff" subtitle="People who run day-to-day operations">
-    <a href="{{ route('staff.archived') }}" class="btn" title="Archived staff"><x-icon name="archive" class="w-4 h-4" /> Archive</a>
-    <a href="{{ route('staff.create') }}" class="btn btn-primary"><x-icon name="plus" class="w-4 h-4" /> Add staff</a>
+    @canDo('staff', 'delete')
+        <a href="{{ route('staff.archived') }}" class="btn" title="Archived staff"><x-icon name="archive" class="w-4 h-4" /> Archive</a>
+    @endcanDo
+    @canDo('staff', 'add')
+        <a href="{{ route('staff.create') }}" class="btn btn-primary"><x-icon name="plus" class="w-4 h-4" /> Add staff</a>
+    @endcanDo
 </x-page-header>
 <div class="card">
     <x-toolbar target="staff" placeholder="Search by name, email or code" :filters="[
@@ -21,7 +25,7 @@
                         <td>{{ $s->roles->pluck('name')->join(', ') }}</td>
                         <td class="text-muted whitespace-nowrap">{{ $s->joining_date?->format('d M Y') }}</td>
                         <td><x-badge :status="$s->status" /></td>
-                        <td class="text-right"><x-row-actions :edit="route('staff.edit', $s->id)" :delete="route('staff.destroy', $s->id)" delete-label="Archive" :label="$s->user->name" :extra="['Reset password']" /></td>
+                        <td class="text-right"><x-row-actions :edit="viewer_can('staff', 'update') ? route('staff.edit', $s->id) : null" :delete="viewer_can('staff', 'delete') ? route('staff.destroy', $s->id) : null" delete-label="Archive" :label="$s->user->name" :extra="['Reset password']" /></td>
                     </tr>
                 @endforeach
                 <x-empty-row :cols="7" message="No staff match your filters." />

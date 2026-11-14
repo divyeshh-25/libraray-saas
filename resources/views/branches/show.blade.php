@@ -9,9 +9,13 @@
 <x-page-header :title="$branch->name" :subtitle="$branch->tenant?->library_name.' · '.$branch->code" :back="['Branches', route('branches.index')]">
     @if ($branch->trashed())
         <span class="badge badge-muted">Archived</span>
-        <button type="button" class="btn btn-primary" data-restore-url="{{ route('branches.restore', $branch->id) }}" data-redirect="{{ route('branches.index') }}"><x-icon name="restore" class="w-4 h-4" /> Restore</button>
+        @canDo('branches', 'delete')
+            <button type="button" class="btn btn-primary" data-restore-url="{{ route('branches.restore', $branch->id) }}" data-redirect="{{ route('branches.index') }}"><x-icon name="restore" class="w-4 h-4" /> Restore</button>
+        @endcanDo
     @else
-        <a href="{{ route('branches.edit', $branch->id) }}" class="btn btn-primary">Edit branch</a>
+        @canDo('branches', 'update')
+            <a href="{{ route('branches.edit', $branch->id) }}" class="btn btn-primary">Edit branch</a>
+        @endcanDo
     @endif
 </x-page-header>
 

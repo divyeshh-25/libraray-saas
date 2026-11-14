@@ -13,7 +13,13 @@ class RoleController extends Controller
 {
     public function index(Request $request): View
     {
-        $tenantId = Auth::user()->tenant_id;
+        $viewer = Auth::user();
+        $tenantId = $viewer->tenant_id;
+
+        // A viewer tied to one branch only sees that branch's member counts;
+        // an owner (or any staff not pinned to a branch) sees the tenant-wide
+        // mix across every branch.
+        $branchId = $viewer->branch_id;
 
         // Card list: cheap (no permissions loaded here — only the selected
         // role's matrix below needs that).
@@ -21,7 +27,7 @@ class RoleController extends Controller
             ->where(fn ($q) => $q->whereNull('tenant_id')->orWhere('tenant_id', $tenantId))
             ->withCount(['staff as staff_count' => fn ($q) => $q->whereHas(
                 'user',
-                fn ($u) => $u->where('tenant_id', $tenantId)
+                fn ($u) => $u->where('tenant_id', $tenantId)->when($branchId, fn ($u) => $u->where('branch_id', $branchId))
             )])
             ->orderByRaw("is_system desc, field(name, 'Admin', 'Librarian', 'Accountant')")
             ->orderBy('name')

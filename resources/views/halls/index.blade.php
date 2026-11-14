@@ -2,9 +2,13 @@
 @section('title', 'Halls')
 @section('content')
 <x-page-header title="Halls" subtitle="Reading halls, cabins and discussion rooms">
-    <a href="{{ route('halls.archived') }}" class="btn" title="Archived halls"><x-icon name="archive" class="w-4 h-4" /> Archive</a>
+    @canDo('halls', 'delete')
+        <a href="{{ route('halls.archived') }}" class="btn" title="Archived halls"><x-icon name="archive" class="w-4 h-4" /> Archive</a>
+    @endcanDo
     <a href="#" class="btn" data-toast="Opens the floor plan designer in a later phase">Floor plan designer</a>
-    <a href="{{ route('halls.create') }}" class="btn btn-primary"><x-icon name="plus" class="w-4 h-4" /> Add hall</a>
+    @canDo('halls', 'add')
+        <a href="{{ route('halls.create') }}" class="btn btn-primary"><x-icon name="plus" class="w-4 h-4" /> Add hall</a>
+    @endcanDo
 </x-page-header>
 <div class="card">
     <x-toolbar target="halls" placeholder="Search halls" :filters="[
@@ -24,7 +28,7 @@
                         <td class="text-right">{{ $seats }}</td>
                         <td><div class="flex items-center gap-2"><div class="h-1.5 flex-1 bg-slate-100 rounded-full"><div class="h-full rounded-full bg-brand-600" style="width: 0%"></div></div><span class="text-[12px] text-muted w-8">0%</span></div></td>
                         <td><x-badge :status="$h->status" /></td>
-                        <td class="text-right"><x-row-actions :view="route('halls.show', $h->id)" :edit="route('halls.edit', $h->id)" :delete="route('halls.destroy', $h->id)" delete-label="Archive" :label="$h->name" /></td>
+                        <td class="text-right"><x-row-actions :view="route('halls.show', $h->id)" :edit="viewer_can('halls', 'update') ? route('halls.edit', $h->id) : null" :delete="viewer_can('halls', 'delete') ? route('halls.destroy', $h->id) : null" delete-label="Archive" :label="$h->name" /></td>
                     </tr>
                 @endforeach
                 <x-empty-row :cols="7" message="No halls match your filters." />
