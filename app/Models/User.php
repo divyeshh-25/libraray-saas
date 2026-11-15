@@ -34,6 +34,11 @@ class User extends Authenticatable
         return $this->hasOne(Staff::class);
     }
 
+    public function student(): HasOne
+    {
+        return $this->hasOne(Student::class);
+    }
+
     /**
      * All "{module}.{action}" permission names granted to this user through
      * their assigned role(s). Owners aren't role-driven (they implicitly have
@@ -70,7 +75,7 @@ class User extends Authenticatable
     public function allowedModules(): array
     {
         if ($this->user_type === 'owner') {
-            return ['branches', 'halls', 'staff', 'students', 'roles', 'general', 'fees'];
+            return ['branches', 'halls', 'staff', 'students', 'attendance', 'roles', 'general', 'fees'];
         }
 
         if ($this->user_type === 'staff') {

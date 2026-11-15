@@ -13,19 +13,71 @@ const widestOptionWidth = (select) => {
     return Math.max(...widths, 0) + 48; // + horizontal padding and the dropdown arrow
 };
 
-if (window.jQuery && window.jQuery.fn.select2) {
-    window.jQuery(() => {
-        window.jQuery('select[data-placeholder]').each(function () {
-            const isFilter = this.hasAttribute('data-table-filter');
-            window.jQuery(this).select2({
-                width: isFilter ? `${widestOptionWidth(this)}px` : '100%',
-                placeholder: window.jQuery(this).data('placeholder'),
-                allowClear: isFilter,
-                minimumResultsForSearch: 2,
-            });
+const initSelect2 = (root = document) => {
+    if (!window.jQuery || !window.jQuery.fn.select2) return;
+    window.jQuery('select[data-placeholder]', root).each(function () {
+        if (window.jQuery(this).data('select2')) return;
+        const isFilter = this.hasAttribute('data-table-filter');
+        window.jQuery(this).select2({
+            width: isFilter ? `${widestOptionWidth(this)}px` : '100%',
+            placeholder: window.jQuery(this).data('placeholder'),
+            allowClear: isFilter,
+            minimumResultsForSearch: 2,
         });
     });
-}
+};
+window.jQuery ? window.jQuery(() => initSelect2()) : initSelect2();
+
+/* ---------- Cascading selects: narrow Shift/Fee plan options to the chosen branch ---------- */
+const wireBranchCascades = (root = document) => {
+    $$('[data-cascade-by-branch]', root).forEach((select) => {
+        if (select.dataset.cascadeWired) return;
+        select.dataset.cascadeWired = '1';
+
+        const form = select.closest('form');
+        const branchSelect = form && $('#branch_id', form);
+        if (!branchSelect) return;
+
+        const options = $$('option[data-branch-id]', select);
+        const apply = () => {
+            const branchId = branchSelect.value;
+            let selectedStillValid = !select.value;
+            options.forEach((opt) => {
+                const matches = !branchId || opt.dataset.branchId === branchId;
+                opt.hidden = !matches;
+                opt.disabled = !matches || opt.dataset.unavailable === '1';
+                if (matches && !opt.disabled && opt.value === select.value) selectedStillValid = true;
+            });
+
+            const hasSelect2 = window.jQuery && window.jQuery(select).data('select2');
+            if (!selectedStillValid) {
+                select.value = '';
+                if (hasSelect2) window.jQuery(select).val('').trigger('change');
+            }
+            if (hasSelect2) {
+                window.jQuery(select).select2('destroy');
+                initSelect2(form);
+            }
+        };
+
+        branchSelect.addEventListener('change', apply);
+        if (window.jQuery) window.jQuery(branchSelect).on('change select2:select select2:clear select2:unselect', apply);
+        apply();
+    });
+};
+window.jQuery ? window.jQuery(() => wireBranchCascades()) : wireBranchCascades();
+
+/* ---------- Auto-submit selects (e.g. attendance's branch/shift filters) ---------- */
+const wireAutosubmit = (root = document) => {
+    $$('[data-autosubmit]', root).forEach((el) => {
+        if (el.dataset.autosubmitWired) return;
+        el.dataset.autosubmitWired = '1';
+        const submit = () => el.form?.submit();
+        el.addEventListener('change', submit);
+        if (window.jQuery) window.jQuery(el).on('change', submit);
+    });
+};
+window.jQuery ? window.jQuery(() => wireAutosubmit()) : wireAutosubmit();
 
 /* ---------- Sidebar (mobile) + collapsible groups ---------- */
 const sidebar = $('#sidebar');
@@ -42,6 +94,114 @@ $$('[data-collapse]').forEach((g) => {
         const body = $('[data-collapse-body]', g);
         body.classList.toggle('open');
         $('[data-chevron]', g).classList.toggle('rotate-90', body.classList.contains('open'));
+    });
+});
+
+/* ---------- Offcanvas (ajax add/edit panels, Bootstrap-offcanvas style) ---------- */
+$$('[data-offcanvas]').forEach((oc) => {
+    const panel = $('[data-offcanvas-panel]', oc);
+    const backdrop = $('[data-offcanvas-backdrop]', oc);
+    const body = $('[data-offcanvas-body]', oc);
+    const titleEl = $('[data-offcanvas-title]', oc);
+    const csrf = $('meta[name="csrf-token"]')?.content;
+    const tableId = oc.dataset.offcanvasTable;
+
+    const refreshTable = () => {
+        const table = tableId && $(`[data-table="${tableId}"]`);
+        if (!table) return;
+        fetch(location.href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then((res) => res.text())
+            .then((html) => {
+                const doc = new DOMParser().parseFromString(html, 'text/html');
+                const newTbody = doc.querySelector(`[data-table="${tableId}"] tbody`);
+                const tbody = $('tbody', table);
+                if (newTbody && tbody) tbody.innerHTML = newTbody.innerHTML;
+                table.dispatchEvent(new Event('refresh'));
+            })
+            .catch(() => location.reload());
+    };
+
+    const open = () => {
+        oc.classList.remove('hidden');
+        requestAnimationFrame(() => {
+            panel.classList.remove('translate-x-full');
+            backdrop.classList.remove('opacity-0');
+        });
+    };
+    const close = () => {
+        panel.classList.add('translate-x-full');
+        backdrop.classList.add('opacity-0');
+        setTimeout(() => { oc.classList.add('hidden'); if (body) body.innerHTML = ''; }, 200);
+    };
+
+    const loadForm = (url, title) => {
+        if (titleEl && title) titleEl.textContent = title;
+        if (body) body.innerHTML = '<div class="p-5 space-y-3"><span class="skeleton block" style="width:40%"></span><span class="skeleton block" style="width:100%;height:36px"></span><span class="skeleton block" style="width:100%;height:36px"></span></div>';
+        open();
+        fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then((res) => res.text())
+            .then((html) => { if (body) { body.innerHTML = html; initSelect2(body); wireBranchCascades(body); } })
+            .catch(() => { if (body) body.innerHTML = '<div class="p-5 text-red-600 text-[13px]">Could not load the form. Please try again.</div>'; });
+    };
+
+    document.addEventListener('click', (e) => {
+        const trigger = e.target.closest('[data-offcanvas-url]');
+        if (!trigger) return;
+        e.preventDefault();
+        loadForm(trigger.dataset.offcanvasUrl, trigger.dataset.offcanvasTitle);
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('[data-offcanvas-close]')) return;
+        e.preventDefault();
+        close();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !oc.classList.contains('hidden')) close();
+    });
+
+    document.addEventListener('submit', (e) => {
+        const form = e.target.closest('[data-ajax-form]');
+        if (!form || !body || !body.contains(form)) return;
+        e.preventDefault();
+
+        const submitBtn = $('button[type=submit]', form);
+        const errorBox = $('[data-form-errors]', form);
+        if (submitBtn) submitBtn.disabled = true;
+        if (errorBox) errorBox.innerHTML = '';
+
+        fetch(form.action, {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': csrf, 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' },
+            body: new FormData(form),
+        })
+            .then(async (res) => {
+                const data = await res.json().catch(() => ({}));
+
+                if (res.status === 422) {
+                    const messages = Object.values(data.errors || {}).flat();
+                    if (errorBox) {
+                        errorBox.innerHTML = `<div class="rounded-md bg-red-50 text-red-700 px-3.5 py-3 text-[13px]"><ul class="list-disc pl-4 space-y-0.5">${messages.map((m) => `<li>${m}</li>`).join('')}</ul></div>`;
+                    }
+                    if (submitBtn) submitBtn.disabled = false;
+                    return;
+                }
+
+                if (!res.ok) {
+                    toast(data.message || 'Something went wrong. Please try again.');
+                    if (submitBtn) submitBtn.disabled = false;
+                    return;
+                }
+
+                close();
+                toast(data.message || 'Saved.');
+                refreshTable();
+            })
+            .catch(() => {
+                toast('Something went wrong. Please try again.');
+                if (submitBtn) submitBtn.disabled = false;
+            });
     });
 });
 
@@ -82,6 +242,83 @@ const toast = (msg) => {
 document.addEventListener('click', (e) => {
     const t = e.target.closest('[data-toast]');
     if (t) toast(t.dataset.toast);
+});
+
+/* ---------- Collect fee (centered modal, not an offcanvas) ---------- */
+const feeModal = $('#collect-fee-modal');
+window.__feeModalWired = !!feeModal;
+if (feeModal) {
+    const feeForm = $('form', feeModal);
+    const csrf = $('meta[name="csrf-token"]')?.content;
+    const closeFeeModal = () => { feeModal.classList.add('hidden'); feeModal.classList.remove('flex'); };
+
+    document.addEventListener('click', (e) => {
+        const trigger = e.target.closest('[data-collect-fee]');
+        if (!trigger) return;
+        e.preventDefault();
+        feeForm.action = trigger.dataset.url;
+        $('[name=fee_structure_id]', feeForm).value = trigger.dataset.feeStructureId || '';
+        $('[name=amount]', feeForm).value = trigger.dataset.amount || '';
+        $('#collect-fee-student-name', feeModal).textContent = trigger.dataset.studentName || '';
+        $('[data-form-errors]', feeForm).innerHTML = '';
+        feeModal.classList.remove('hidden');
+        feeModal.classList.add('flex');
+    });
+
+    $$('[data-modal-close]', feeModal).forEach((b) => b.addEventListener('click', (e) => { e.preventDefault(); closeFeeModal(); }));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !feeModal.classList.contains('hidden')) closeFeeModal(); });
+
+    feeForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = $('button[type=submit]', feeForm);
+        const errorBox = $('[data-form-errors]', feeForm);
+        if (submitBtn) submitBtn.disabled = true;
+        errorBox.innerHTML = '';
+
+        try {
+            const res = await fetch(feeForm.action, {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': csrf, 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' },
+                body: new FormData(feeForm),
+            });
+            const data = await res.json().catch(() => ({}));
+
+            if (res.status === 422) {
+                const messages = Object.values(data.errors || {}).flat();
+                errorBox.innerHTML = `<div class="rounded-md bg-red-50 text-red-700 px-3.5 py-3 text-[13px]"><ul class="list-disc pl-4 space-y-0.5">${messages.map((m) => `<li>${m}</li>`).join('')}</ul></div>`;
+                return;
+            }
+            if (!res.ok) { toast(data.message || 'Something went wrong. Please try again.'); return; }
+
+            closeFeeModal();
+            toast(data.message || 'Fee collected.');
+            setTimeout(() => location.reload(), 300);
+        } catch {
+            toast('Something went wrong. Please try again.');
+        } finally {
+            if (submitBtn) submitBtn.disabled = false;
+        }
+    });
+}
+
+/* ---------- Confirm via SweetAlert2 before submitting a form ---------- */
+document.addEventListener('submit', (e) => {
+    const form = e.target.closest('[data-confirm-submit]');
+    if (!form || form.dataset.confirmed || !window.Swal) return;
+    e.preventDefault();
+    Swal.fire({
+        title: 'Are you sure?',
+        text: form.dataset.confirmSubmit,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, continue',
+        confirmButtonColor: '#dc2626',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.dataset.confirmed = '1';
+            form.submit();
+        }
+    });
 });
 
 /* ---------- Restore (undo soft-delete) ---------- */
@@ -214,13 +451,20 @@ $$('[data-table]').forEach((table) => {
         }
     };
 
-    $$(`[data-clear-filters]`, table).forEach((b) => b.addEventListener('click', () => {
+    $$(`[data-clear-filters="${id}"]`).forEach((b) => b.addEventListener('click', () => {
         if (search) search.value = '';
-        filters.forEach((f) => { f.value = ''; });
+        filters.forEach((f) => {
+            f.value = '';
+            if (window.jQuery && window.jQuery(f).data('select2')) window.jQuery(f).val('').trigger('change');
+        });
         page = 1; render();
     }));
     search?.addEventListener('input', () => { page = 1; render(); });
-    filters.forEach((f) => f.addEventListener('change', () => { page = 1; render(); }));
+    filters.forEach((f) => {
+        const onChange = () => { page = 1; render(); };
+        f.addEventListener('change', onChange);
+        if (window.jQuery) window.jQuery(f).on('change select2:select select2:clear select2:unselect', onChange);
+    });
     table.addEventListener('refresh', render);
 
     // Brief skeleton on first paint so the table feels like it is loading, not popping in.

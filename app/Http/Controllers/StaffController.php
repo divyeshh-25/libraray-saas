@@ -22,8 +22,9 @@ class StaffController extends Controller
     public function index(): View
     {
         $staff = $this->scopeThroughUser(Staff::query())->with(['user.branch', 'roles'])->latest()->get();
+        $branches = $this->scopeBranchRow(Branch::query())->orderBy('name')->pluck('name');
 
-        return view('staff.index', compact('staff'));
+        return view('staff.index', compact('staff', 'branches'));
     }
 
     public function create(): View

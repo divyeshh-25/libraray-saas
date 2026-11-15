@@ -37,15 +37,15 @@
         </div>
     </div>
     <div class="card">
-        <div class="card-head"><div class="card-title">Enrollment</div></div>
+        <div class="card-head"><div class="card-title">Branch & status</div></div>
         <div class="card-body grid sm:grid-cols-2 gap-4">
             <x-field label="Branch" name="branch" :options="$branches" :value="$s?->user->branch ? $s->user->branch->name.' ('.$s->user->branch->code.')' : ''" required />
-            <x-field label="Shift" name="shift" :options="['Morning (6–12)', 'Afternoon (12–6)', 'Evening (6–11)', 'Full Day']" :value="$s->shift ?? ''" />
-            <x-field label="Fee plan" name="fee" :options="['Monthly · ₹1,200', 'Monthly · ₹1,500', 'Monthly · ₹2,500', 'Quarterly · ₹6,900']" :value="$s?->fee_amount ? 'Monthly · ₹'.number_format($s->fee_amount) : ''" />
-            <x-field label="Seat" name="seat" :value="$s->seat_label ?? ''" placeholder="Pick from the hall seat map" hint="Leave empty to allocate later." />
             <x-field label="Admission date" name="admitted" type="date" :value="$s?->admission_date?->format('Y-m-d') ?? now()->format('Y-m-d')" />
-            <x-field label="Status" name="status" :options="['Active', 'Inactive']" :value="$s ? ucfirst($s->status) : ''" required />
+            <x-field label="Status" name="status" :options="['Active', 'Inactive']" :value="$s ? ucfirst($s->status) : 'Active'" required />
         </div>
+        @if ($mode === 'edit')
+            <div class="card-body pt-0 text-[12.5px] text-muted border-t border-line">Shift, fee plan and seat are managed per enrollment, from the student's row menu on the <a href="{{ route('students.index') }}" class="text-brand-700 hover:underline">students list</a>.</div>
+        @endif
     </div>
     <x-form-actions :cancel="route('students.index')" :save="$mode === 'edit' ? 'Save changes' : 'Admit student'" submit />
 </form>

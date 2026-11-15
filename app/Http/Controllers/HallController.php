@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Concerns\ScopesToViewer;
 use App\Models\Branch;
 use App\Models\Hall;
+use App\Models\Seat;
+use App\Models\Shift;
+use App\Models\Student;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,26 +29,30 @@ class HallController extends Controller
         return view('halls.index', compact('halls', 'branches'));
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
         $branches = $this->branchOptions();
+        $data = ['mode' => 'create', 'branches' => $branches];
 
-        return view('halls.form', ['mode' => 'create', 'branches' => $branches]);
+        return view($request->ajax() ? 'halls._form' : 'halls.form', $data);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         $data = $this->validateData($request);
 
-        Hall::create([
+        $hall = Hall::create([
             'branch_id' => $this->resolveBranchId($data['branch']),
             'name' => $data['name'],
             'description' => $data['description'] ?? null,
             'status' => strtolower($data['status']),
             'floors' => $data['floors'] ?? 1,
-            'rows' => $data['rows'] ?? null,
-            'cols' => $data['cols'] ?? null,
+            'total_seats' => $data['total_seats'] ?? null,
         ]);
+
+        if ($request->wantsJson()) {
+            return response()->json(['message' => 'Hall created.', 'hall' => $hall]);
+        }
 
         return redirect()->route('halls.index')->with('success', 'Hall created.');
     }
@@ -54,20 +61,42 @@ class HallController extends Controller
     {
         $hall = $this->scopeThroughBranch(Hall::withTrashed())->with('branch.tenant')->findOrFail($id);
 
-        $seats = ($hall->rows ?? 0) * ($hall->cols ?? 0);
+        $seatRows = Seat::where('branch_id', $hall->branch_id)
+            ->where('status', 'active')
+            ->whereHas('floorPlanObject.floor', fn ($q) => $q->where('hall_id', $hall->id))
+            ->with(['floorPlanObject', 'allocations' => fn ($q) => $q->where('status', 'active')->with(['student.user', 'shift'])])
+            ->get()
+            // seat_number is free text (e.g. "S1".."S10"); a plain DB sort
+            // orders it lexically, so sort naturally once loaded instead.
+            ->sortBy(fn (Seat $seat) => $seat->seat_number, SORT_NATURAL | SORT_FLAG_CASE)
+            ->values();
 
-        return view('halls.show', compact('hall', 'seats'));
+        $seats = $seatRows->isNotEmpty() ? $seatRows->count() : (int) ($hall->total_seats ?? 0);
+        $occupied = $seatRows->filter(fn (Seat $seat) => $seat->activeAllocation() !== null)->count();
+
+        $students = Student::whereHas('user', fn ($q) => $q->where('branch_id', $hall->branch_id))
+            ->with('user')
+            ->get();
+
+        if (! Shift::where('branch_id', $hall->branch_id)->exists()) {
+            Shift::seedDefaultsForBranch($hall->branch_id);
+        }
+
+        $shifts = Shift::where('branch_id', $hall->branch_id)->where('status', 'active')->get();
+
+        return view('halls.show', compact('hall', 'seats', 'occupied', 'seatRows', 'students', 'shifts'));
     }
 
-    public function edit(int $id): View
+    public function edit(Request $request, int $id): View
     {
         $hall = $this->scopeThroughBranch(Hall::query())->findOrFail($id);
         $branches = $this->branchOptions();
+        $data = ['mode' => 'edit', 'hall' => $hall, 'branches' => $branches];
 
-        return view('halls.form', ['mode' => 'edit', 'hall' => $hall, 'branches' => $branches]);
+        return view($request->ajax() ? 'halls._form' : 'halls.form', $data);
     }
 
-    public function update(Request $request, int $id): RedirectResponse
+    public function update(Request $request, int $id): RedirectResponse|JsonResponse
     {
         $hall = $this->scopeThroughBranch(Hall::query())->findOrFail($id);
         $data = $this->validateData($request);
@@ -78,9 +107,12 @@ class HallController extends Controller
             'description' => $data['description'] ?? null,
             'status' => strtolower($data['status']),
             'floors' => $data['floors'] ?? 1,
-            'rows' => $data['rows'] ?? null,
-            'cols' => $data['cols'] ?? null,
+            'total_seats' => $data['total_seats'] ?? null,
         ]);
+
+        if ($request->wantsJson()) {
+            return response()->json(['message' => 'Hall updated.', 'hall' => $hall]);
+        }
 
         return redirect()->route('halls.index')->with('success', 'Hall updated.');
     }
@@ -145,8 +177,7 @@ class HallController extends Controller
             'name' => ['required', 'string', 'max:150'],
             'description' => ['nullable', 'string'],
             'floors' => ['nullable', 'integer', 'min:1'],
-            'rows' => ['nullable', 'integer', 'min:1'],
-            'cols' => ['nullable', 'integer', 'min:1'],
+            'total_seats' => ['nullable', 'integer', 'min:1'],
         ]);
     }
 }

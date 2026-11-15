@@ -40,7 +40,7 @@ class RoleController extends Controller
         $selectedRole ??= $roles->firstWhere('name', 'Admin') ?? $roles->first();
         $selectedRole?->load('permissions');
 
-        $actions = ['view', 'add', 'update', 'delete'];
+        $actions = ['view', 'add', 'update', 'delete', 'enroll'];
         $permissionsByModule = Permission::whereIn('action', $actions)->get()->groupBy('module');
 
         return view('settings.roles', compact('roles', 'selectedRole', 'permissionsByModule', 'actions'));

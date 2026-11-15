@@ -35,4 +35,14 @@ class Student extends Model
     {
         return $this->hasMany(FeeInvoice::class);
     }
+
+    public function enrollments(): HasMany
+    {
+        return $this->hasMany(StudentEnrollment::class);
+    }
+
+    public function activeEnrollment(): ?StudentEnrollment
+    {
+        return $this->enrollments->firstWhere('status', 'active');
+    }
 }

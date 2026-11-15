@@ -11,5 +11,8 @@
             @foreach ($f['options'] as $o)<option>{{ $o }}</option>@endforeach
         </select>
     @endforeach
+    @if (count($filters))
+        <button type="button" class="btn btn-sm" data-clear-filters="{{ $target }}"><x-icon name="x" class="w-4 h-4" /> Reset</button>
+    @endif
     <span class="ml-auto text-[12.5px] text-muted" data-table-count="{{ $target }}"></span>
 </div>

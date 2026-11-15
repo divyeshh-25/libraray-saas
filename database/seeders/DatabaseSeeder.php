@@ -18,8 +18,9 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             PlanSeeder::class,
             PermissionSeeder::class,
-            // TenantSeeder::class,
+            DemoSeeder::class,
             ShiftSeeder::class,
+            FeeStructureSeeder::class,
         ]);
     }
 }

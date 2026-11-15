@@ -45,7 +45,7 @@
             <x-field label="Designation" name="designation" :value="$s->designation ?? ''" />
             <x-field label="Role" name="role" :options="$roles" :value="$s?->roles->first()?->name ?? ''" hint="Controls what this person can see and change." required />
             <x-field label="Joining date" name="joined" type="date" :value="$s?->joining_date?->format('Y-m-d') ?? now()->format('Y-m-d')" />
-            <x-field label="Status" name="status" :options="['Active', 'Inactive']" :value="$s ? ucfirst($s->status) : ''" required />
+            <x-field label="Status" name="status" :options="['Active', 'Inactive']" :value="$s ? ucfirst($s->status) : 'Active'" required />
         </div>
     </div>
     <x-form-actions :cancel="route('staff.index')" :save="$mode === 'edit' ? 'Save changes' : 'Add staff'" submit />

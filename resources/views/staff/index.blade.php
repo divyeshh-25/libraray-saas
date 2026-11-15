@@ -11,6 +11,7 @@
 </x-page-header>
 <div class="card">
     <x-toolbar target="staff" placeholder="Search by name, email or code" :filters="[
+        'All branches' => ['col' => 2, 'options' => $branches],
         'All statuses' => ['col' => 5, 'options' => ['Active', 'Inactive']],
     ]" />
     <div class="overflow-x-auto">

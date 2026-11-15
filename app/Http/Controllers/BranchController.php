@@ -37,18 +37,19 @@ class BranchController extends Controller
         return view('branches.index', compact('branches', 'tenants', 'cities'));
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
         $tenants = collect([Tenant::find($this->viewerTenantId())->library_name]);
+        $data = ['mode' => 'create', 'tenants' => $tenants];
 
-        return view('branches.form', ['mode' => 'create', 'tenants' => $tenants]);
+        return view($request->ajax() ? 'branches._form' : 'branches.form', $data);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         $data = $this->validateData($request);
 
-        Branch::create([
+        $branch = Branch::create([
             'tenant_id' => Auth::user()->tenant_id,
             'name' => $data['name'],
             'code' => $data['code'],
@@ -60,6 +61,10 @@ class BranchController extends Controller
             'closes_at' => $data['closes'] ?? null,
             'weekly_off' => $data['off'] ?? null,
         ]);
+
+        if ($request->wantsJson()) {
+            return response()->json(['message' => 'Branch created.', 'branch' => $branch]);
+        }
 
         return redirect()->route('branches.index')->with('success', 'Branch created.');
     }
@@ -78,15 +83,16 @@ class BranchController extends Controller
         return view('branches.show', compact('branch', 'halls', 'seatsCount', 'occupancy'));
     }
 
-    public function edit(int $id): View
+    public function edit(Request $request, int $id): View
     {
         $branch = $this->scopeBranchRow(Branch::query())->findOrFail($id);
         $tenants = collect([Tenant::find($this->viewerTenantId())->library_name]);
+        $data = ['mode' => 'edit', 'branch' => $branch, 'tenants' => $tenants];
 
-        return view('branches.form', ['mode' => 'edit', 'branch' => $branch, 'tenants' => $tenants]);
+        return view($request->ajax() ? 'branches._form' : 'branches.form', $data);
     }
 
-    public function update(Request $request, int $id): RedirectResponse
+    public function update(Request $request, int $id): RedirectResponse|JsonResponse
     {
         $branch = $this->scopeBranchRow(Branch::query())->findOrFail($id);
         $data = $this->validateData($request);
@@ -102,6 +108,10 @@ class BranchController extends Controller
             'closes_at' => $data['closes'] ?? null,
             'weekly_off' => $data['off'] ?? null,
         ]);
+
+        if ($request->wantsJson()) {
+            return response()->json(['message' => 'Branch updated.', 'branch' => $branch]);
+        }
 
         return redirect()->route('branches.index')->with('success', 'Branch updated.');
     }

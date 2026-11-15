@@ -1,17 +1,23 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\AdminLoginController;
+use App\Http\Controllers\Auth\StudentLoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\FeeStructureController;
+use App\Http\Controllers\FloorPlanController;
 use App\Http\Controllers\GeneralSettingController;
 use App\Http\Controllers\HallController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SeatAllocationController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\StudentPortalController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TenantController;
 use Illuminate\Support\Facades\Route;
@@ -41,7 +47,27 @@ Route::middleware('guest:admin')->group(function () {
 });
 Route::post('/admin/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
 
-Route::middleware('auth:web,admin')->group(function () {
+// Student auth (users table, guard: web, user_type = student)
+Route::middleware('guest:web')->group(function () {
+    Route::get('/student/login', [StudentLoginController::class, 'show'])->name('student.login');
+    Route::post('/student/login', [StudentLoginController::class, 'login']);
+});
+Route::post('/student/logout', [StudentLoginController::class, 'logout'])->name('student.logout');
+
+// Student portal: web guard, restricted to user_type = student. Kept fully
+// separate from the owner/admin/staff area below (staff-area middleware
+// blocks students from it, student-only middleware blocks everyone else
+// from this one).
+Route::middleware(['auth:web', 'student-only'])->prefix('student')->name('student.')->group(function () {
+    Route::get('/dashboard', [StudentPortalController::class, 'dashboard'])->name('dashboard');
+    Route::post('/check-in', [StudentPortalController::class, 'checkIn'])->name('check-in');
+    Route::post('/check-out', [StudentPortalController::class, 'checkOut'])->name('check-out');
+    Route::get('/profile', [StudentPortalController::class, 'editProfile'])->name('profile.edit');
+    Route::put('/profile', [StudentPortalController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/profile/password', [StudentPortalController::class, 'updatePassword'])->name('profile.password');
+});
+
+Route::middleware(['auth:web,admin', 'staff-area'])->group(function () {
     Route::view('/profile', 'profile')->name('profile');
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 
@@ -117,6 +143,12 @@ Route::middleware('auth:web,admin')->group(function () {
         Route::middleware('module:halls,update')->group(function () {
             Route::get('/halls/{id}/edit', [HallController::class, 'edit'])->whereNumber('id')->name('halls.edit');
             Route::put('/halls/{id}', [HallController::class, 'update'])->whereNumber('id')->name('halls.update');
+
+            Route::get('/halls/{id}/floor-plan', [FloorPlanController::class, 'designer'])->whereNumber('id')->name('halls.floor-plan');
+            Route::post('/halls/{id}/floor-plan', [FloorPlanController::class, 'save'])->whereNumber('id')->name('halls.floor-plan.save');
+
+            Route::post('/halls/{id}/seats/{seatId}/allocate', [SeatAllocationController::class, 'store'])->whereNumber(['id', 'seatId'])->name('halls.seats.allocate');
+            Route::post('/seat-allocations/{id}/release', [SeatAllocationController::class, 'release'])->whereNumber('id')->name('seat-allocations.release');
         });
         Route::middleware('module:halls,delete')->group(function () {
             Route::get('/halls/archived', [HallController::class, 'archived'])->name('halls.archived');
@@ -148,6 +180,7 @@ Route::middleware('auth:web,admin')->group(function () {
     Route::middleware('module:students')->group(function () {
         Route::get('/students', [StudentController::class, 'index'])->name('students.index');
         Route::get('/students/{id}', [StudentController::class, 'show'])->whereNumber('id')->name('students.show');
+        Route::get('/students/{id}/enrollment-history', [StudentController::class, 'enrollmentHistory'])->whereNumber('id')->name('students.enrollment-history');
 
         Route::middleware('module:students,add')->group(function () {
             Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
@@ -156,11 +189,31 @@ Route::middleware('auth:web,admin')->group(function () {
         Route::middleware('module:students,update')->group(function () {
             Route::get('/students/{id}/edit', [StudentController::class, 'edit'])->whereNumber('id')->name('students.edit');
             Route::put('/students/{id}', [StudentController::class, 'update'])->whereNumber('id')->name('students.update');
+            Route::post('/students/{id}/collect-fee', [StudentController::class, 'collectFee'])->whereNumber('id')->name('students.collect-fee');
         });
         Route::middleware('module:students,delete')->group(function () {
             Route::get('/students/archived', [StudentController::class, 'archived'])->name('students.archived');
             Route::post('/students/{id}/restore', [StudentController::class, 'restore'])->whereNumber('id')->name('students.restore');
             Route::delete('/students/{id}', [StudentController::class, 'destroy'])->whereNumber('id')->name('students.destroy');
+        });
+    });
+
+    // Enrollments: no standalone pages — enrolling/editing happens from the Students module (modal), gated by students.enroll. Tenant-scoped, never for the SaaS admin.
+    Route::middleware('module:students')->group(function () {
+        Route::middleware('module:students,enroll')->group(function () {
+            Route::get('/enrollments/create', [EnrollmentController::class, 'create'])->name('enrollments.create');
+            Route::post('/enrollments', [EnrollmentController::class, 'store'])->name('enrollments.store');
+            Route::get('/enrollments/{id}/edit', [EnrollmentController::class, 'edit'])->whereNumber('id')->name('enrollments.edit');
+            Route::put('/enrollments/{id}', [EnrollmentController::class, 'update'])->whereNumber('id')->name('enrollments.update');
+        });
+    });
+
+    // Attendance: dynamic (database-backed via AttendanceController). Tenant-scoped, never for the SaaS admin.
+    Route::middleware('module:attendance')->group(function () {
+        Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+
+        Route::middleware('module:attendance,add')->group(function () {
+            Route::post('/attendance', [AttendanceController::class, 'store'])->name('attendance.store');
         });
     });
 

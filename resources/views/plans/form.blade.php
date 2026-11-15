@@ -28,7 +28,7 @@
             <div class="card-head"><div class="card-title">Plan details</div></div>
             <div class="card-body grid sm:grid-cols-2 gap-4">
                 <x-field label="Plan name" name="name" :value="$p->name ?? ''" placeholder="e.g. Growth" required />
-                <x-field label="Status" name="status" :options="['Active', 'Inactive']" :value="$p ? ucfirst($p->status) : ''" required />
+                <x-field label="Status" name="status" :options="['Active', 'Inactive']" :value="$p ? ucfirst($p->status) : 'Active'" required />
                 <x-field label="Price (₹)" name="price" type="number" :value="$p->price ?? ''" required />
                 <x-field label="Billing cycle" name="cycle" :options="['Monthly', 'Quarterly', 'Yearly']" :value="$p ? ucfirst($p->billing_cycle) : ''" required />
             </div>

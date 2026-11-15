@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Concerns\ScopesToViewer;
 use App\Models\Branch;
+use App\Models\FeeInvoice;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -20,9 +21,10 @@ class StudentController extends Controller
 
     public function index(): View
     {
-        $students = $this->scopeThroughUser(Student::query())->with('user.branch')->latest()->get();
+        $students = $this->scopeThroughUser(Student::query())->with(['user.branch', 'enrollments' => fn ($q) => $q->where('status', 'active')->with(['shift', 'feeStructure', 'seatAllocation.seat'])])->latest()->get();
+        $branches = $this->scopeBranchRow(Branch::query())->orderBy('name')->pluck('name');
 
-        return view('students.index', compact('students'));
+        return view('students.index', compact('students', 'branches'));
     }
 
     public function create(): View
@@ -55,9 +57,6 @@ class StudentController extends Controller
                 'guardian_name' => $data['guardian_name'] ?? null,
                 'guardian_phone' => $data['guardian_phone'] ?? null,
                 'status' => strtolower($data['status']),
-                'shift' => $data['shift'] ?? null,
-                'seat_label' => $data['seat'] ?? null,
-                'fee_amount' => $this->parseFee($data['fee'] ?? null),
             ]);
         });
 
@@ -66,7 +65,7 @@ class StudentController extends Controller
 
     public function show(int $id): View
     {
-        $student = $this->scopeThroughUser(Student::withTrashed())->with('user.branch')->findOrFail($id);
+        $student = $this->scopeThroughUser(Student::withTrashed())->with(['user.branch', 'enrollments' => fn ($q) => $q->where('status', 'active')->with(['shift', 'feeStructure', 'seatAllocation.seat'])])->findOrFail($id);
         $attendances = $student->attendances()->latest('attendance_date')->take(28)->get();
         $invoices = $student->invoices()->latest('invoice_date')->take(6)->get();
 
@@ -101,9 +100,6 @@ class StudentController extends Controller
                 'guardian_name' => $data['guardian_name'] ?? null,
                 'guardian_phone' => $data['guardian_phone'] ?? null,
                 'status' => strtolower($data['status']),
-                'shift' => $data['shift'] ?? null,
-                'seat_label' => $data['seat'] ?? null,
-                'fee_amount' => $this->parseFee($data['fee'] ?? null),
             ]);
         });
 
@@ -115,6 +111,41 @@ class StudentController extends Controller
         $this->scopeThroughUser(Student::query())->findOrFail($id)->delete();
 
         return response()->json(['message' => 'Student archived.']);
+    }
+
+    public function collectFee(Request $request, int $id): JsonResponse
+    {
+        $student = $this->scopeThroughUser(Student::query())->findOrFail($id);
+
+        $data = $request->validate([
+            'fee_structure_id' => ['nullable', 'integer'],
+            'amount' => ['required', 'numeric', 'min:0.01'],
+            'paid_on' => ['required', 'date'],
+            'notes' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $invoice = FeeInvoice::create([
+            'student_id' => $student->id,
+            'fee_structure_id' => $data['fee_structure_id'] ?? null,
+            'invoice_number' => 'INV-'.now()->format('ymd').'-'.str_pad((string) random_int(0, 9999), 4, '0', STR_PAD_LEFT),
+            'invoice_date' => $data['paid_on'],
+            'due_date' => $data['paid_on'],
+            'total_amount' => $data['amount'],
+            'discount_amount' => 0,
+            'final_amount' => $data['amount'],
+            'status' => 'paid',
+            'notes' => $data['notes'] ?? null,
+        ]);
+
+        return response()->json(['message' => 'Fee collected.', 'invoice' => $invoice]);
+    }
+
+    public function enrollmentHistory(int $id): View
+    {
+        $student = $this->scopeThroughUser(Student::query())->with('user')->findOrFail($id);
+        $enrollments = $student->enrollments()->with(['branch', 'shift', 'feeStructure', 'seatAllocation.seat'])->withTrashed()->latest('start_date')->get();
+
+        return view('students._history', compact('student', 'enrollments'));
     }
 
     public function archived(): View
@@ -150,17 +181,6 @@ class StudentController extends Controller
         return $code ? $this->scopeBranchRow(Branch::where('code', $code))->first()?->id : null;
     }
 
-    private function parseFee(?string $label): ?float
-    {
-        if (! $label) {
-            return null;
-        }
-
-        preg_match('/[\d,]+(\.\d+)?/', $label, $m);
-
-        return isset($m[0]) ? (float) str_replace(',', '', $m[0]) : null;
-    }
-
     /**
      * @return array<string, mixed>
      */
@@ -175,9 +195,6 @@ class StudentController extends Controller
             'guardian_name' => ['nullable', 'string', 'max:150'],
             'guardian_phone' => ['nullable', 'string', 'max:20'],
             'branch' => ['required', 'string'],
-            'shift' => ['nullable', 'string'],
-            'fee' => ['nullable', 'string'],
-            'seat' => ['nullable', 'string', 'max:50'],
             'admitted' => ['nullable', 'date'],
             'status' => ['required', 'string', 'in:Active,Inactive'],
         ];

@@ -46,7 +46,7 @@
                             <button type="button" data-edit-pick="{{ $r->id }}">Edit</button>
                         @endcanDo
                         @canDo('roles', 'delete')
-                        <form method="POST" action="{{ route('settings.roles.destroy', $r->id) }}" onsubmit="return confirm('Delete {{ $r->name }}? Staff assigned to this role will lose it.')">
+                        <form method="POST" action="{{ route('settings.roles.destroy', $r->id) }}" data-confirm-submit="Delete {{ $r->name }}? Staff assigned to this role will lose it.">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="!text-red-700">Delete</button>
