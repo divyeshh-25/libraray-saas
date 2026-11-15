@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title') · LMS</title>
+    <title>@yield('title') · LibNextGen</title>
     @fonts
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -12,7 +12,7 @@
     <section class="hidden lg:flex flex-col justify-between bg-slate-900 text-white p-12 relative overflow-hidden bg-[radial-gradient(ellipse_at_bottom_left,#2b44a3_0%,transparent_60%)]">
         <div class="flex items-center gap-2.5">
             <span class="w-8 h-8 rounded-md bg-brand-500 grid place-items-center font-semibold">W</span>
-            <span class="font-semibold text-[16px]">LMS</span>
+            <span class="font-semibold text-[16px]">LibNextGen</span>
         </div>
         <div class="max-w-md">
             <h2 class="text-[28px] leading-tight font-semibold tracking-tight">Run every library branch from one place.</h2>
@@ -23,14 +23,14 @@
                 <div><dt class="text-slate-400">Branches</dt><dd class="text-[22px] font-semibold mt-1">213</dd></div>
             </dl>
         </div>
-        <p class="text-[12.5px] text-slate-500">© 2026 DivyeshCodes</p>
+        <p class="text-[12.5px] text-slate-500">© 2026 LibNextGen · Developed by <a href="https://divyesh-panchal.vercel.app/" class="underline hover:text-slate-300" target="_blank" rel="noopener">Divyesh Panchal</a></p>
     </section>
 
     <section class="flex items-center justify-center p-6 sm:p-10 bg-white">
         <div class="w-full max-w-sm" style="animation: rise .5s cubic-bezier(.22,1,.36,1) backwards">
             <div class="lg:hidden flex items-center gap-2.5 mb-8">
                 <span class="w-8 h-8 rounded-md bg-brand-500 text-white grid place-items-center font-semibold">W</span>
-                <span class="font-semibold text-[16px]">LMS</span>
+                <span class="font-semibold text-[16px]">LibNextGen</span>
             </div>
             @yield('content')
         </div>

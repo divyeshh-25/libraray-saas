@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Dashboard') · LMS</title>
+    <title>@yield('title', 'Dashboard') · LibNextGen</title>
     @fonts
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -42,7 +42,7 @@
     <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-60 bg-slate-900 flex flex-col -translate-x-full lg:translate-x-0 transition-transform">
         <div class="h-14 px-5 flex items-center gap-2.5 border-b border-white/10 shrink-0">
             <span class="w-7 h-7 rounded-md bg-gradient-to-br from-brand-500 to-brand-700 text-white grid place-items-center text-[13px] font-semibold shadow-md shadow-brand-700/40">W</span>
-            <span class="text-white font-semibold text-[15px]">LMS</span>
+            <span class="text-white font-semibold text-[15px]">LibNextGen</span>
         </div>
         <nav class="flex-1 overflow-y-auto p-3 space-y-0.5">
             @foreach ($nav as [$label, $route, $pattern, $icon])
