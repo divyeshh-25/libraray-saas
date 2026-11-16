@@ -1,0 +1,67 @@
+
+name: Deploy Laravel to Alwaysdata
+
+on:
+  push:
+    branches:
+      - production
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout production branch
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, bcmath, ctype, curl, dom, fileinfo, gd, intl, json, mbstring, openssl, pdo, pdo_mysql, tokenizer, xml, zip
+          tools: composer
+
+      - name: Install production dependencies
+        run: composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader --no-scripts
+
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.ALWAYSDATA_SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.ALWAYSDATA_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Deploy application files
+        env:
+          HOST: ${{ secrets.ALWAYSDATA_HOST }}
+          USER: ${{ secrets.ALWAYSDATA_USER }}
+          PORT: ${{ secrets.ALWAYSDATA_PORT }}
+        run: |
+          rsync -az \
+            --exclude='.env' \
+            --exclude='.git/' \
+            --exclude='storage/' \
+            --exclude='node_modules/' \
+            -e "ssh -i ~/.ssh/deploy_key -p $PORT" \
+            ./ "$USER@$HOST:/home/libnextgen/apps/library-saas/"
+
+      - name: Run Laravel deployment commands
+        env:
+          HOST: ${{ secrets.ALWAYSDATA_HOST }}
+          USER: ${{ secrets.ALWAYSDATA_USER }}
+          PORT: ${{ secrets.ALWAYSDATA_PORT }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "$PORT" "$USER@$HOST" '
+            cd /home/libnextgen/apps/library-saas &&
+            mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs bootstrap/cache &&
+            chmod -R ug+rwX storage bootstrap/cache &&
+            php artisan package:discover --ansi &&
+            php artisan optimize:clear
+          '
