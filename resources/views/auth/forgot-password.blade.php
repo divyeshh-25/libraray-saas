@@ -1,5 +1,7 @@
 @extends('layouts.guest')
 @section('title', 'Forgot password')
+@section('meta_description', 'Reset the password for your LibNextGen account.')
+@section('robots', 'noindex, nofollow')
 @section('content')
 <h1 class="text-[22px] font-semibold tracking-tight">Forgot your password?</h1>
 <p class="text-muted mt-1">Enter your email and we’ll send you a reset link.</p>

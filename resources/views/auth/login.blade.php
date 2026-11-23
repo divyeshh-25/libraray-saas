@@ -1,5 +1,6 @@
 @extends('layouts.guest')
 @section('title', 'Sign in')
+@section('meta_description', 'Sign in to your LibNextGen library, staff or student account to manage branches, seats, fees and attendance.')
 @section('content')
 <h1 class="text-[22px] font-semibold tracking-tight">Welcome back</h1>
 <p class="text-muted mt-1">Sign in to your library, staff or student account.</p>

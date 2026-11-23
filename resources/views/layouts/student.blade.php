@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Student Portal') · LibNextGen</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     @fonts
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -12,7 +14,7 @@
 <div class="min-h-screen max-w-xl mx-auto">
     <header class="sticky top-0 z-10 bg-white border-b border-line px-4 h-14 flex items-center justify-between">
         <div class="flex items-center gap-2.5">
-            <span class="w-7 h-7 rounded-md bg-gradient-to-br from-brand-500 to-brand-700 text-white grid place-items-center text-[13px] font-semibold">W</span>
+            <span class="w-7 h-7 rounded-md bg-gradient-to-br from-brand-500 to-brand-700 text-white grid place-items-center"><x-brand-icon class="w-4 h-4" /></span>
             <span class="font-semibold text-[15px]">Student Portal</span>
         </div>
         <div class="flex items-center gap-3">

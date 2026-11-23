@@ -1,5 +1,6 @@
 @extends('layouts.guest')
 @section('title', 'Admin Sign in')
+@section('robots', 'noindex, nofollow')
 @section('content')
 <h1 class="text-[22px] font-semibold tracking-tight">SaaS Admin</h1>
 <p class="text-muted mt-1">Sign in to the platform admin panel.</p>

@@ -35,7 +35,7 @@
                 <div class="sm:col-span-2">
                     <label class="label">Logo</label>
                     <div class="flex items-center gap-4">
-                        <span class="w-12 h-12 rounded-md bg-brand-500 text-white grid place-items-center text-[18px] font-semibold">W</span>
+                        <span class="w-12 h-12 rounded-md bg-brand-500 text-white grid place-items-center"><x-brand-icon class="w-6 h-6" /></span>
                         <button type="button" class="btn btn-sm" data-toast="Upload is disabled in this preview">Replace logo</button>
                         <span class="hint !mt-0">PNG or SVG, at least 256 px.</span>
                     </div>
