@@ -2,18 +2,19 @@
 
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\AdminLoginController;
-use App\Http\Controllers\Auth\StudentLoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\FeeStructureController;
 use App\Http\Controllers\FloorPlanController;
 use App\Http\Controllers\GeneralSettingController;
 use App\Http\Controllers\HallController;
 use App\Http\Controllers\PlanController;
+use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SeatAllocationController;
 use App\Http\Controllers\StaffController;
@@ -47,12 +48,6 @@ Route::middleware('guest:admin')->group(function () {
 });
 Route::post('/admin/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
 
-// Student auth (users table, guard: web, user_type = student)
-Route::middleware('guest:web')->group(function () {
-    Route::get('/student/login', [StudentLoginController::class, 'show'])->name('student.login');
-    Route::post('/student/login', [StudentLoginController::class, 'login']);
-});
-Route::post('/student/logout', [StudentLoginController::class, 'logout'])->name('student.logout');
 
 // Student portal: web guard, restricted to user_type = student. Kept fully
 // separate from the owner/admin/staff area below (staff-area middleware
@@ -65,11 +60,13 @@ Route::middleware(['auth:web', 'student-only'])->prefix('student')->name('studen
     Route::get('/profile', [StudentPortalController::class, 'editProfile'])->name('profile.edit');
     Route::put('/profile', [StudentPortalController::class, 'updateProfile'])->name('profile.update');
     Route::put('/profile/password', [StudentPortalController::class, 'updatePassword'])->name('profile.password');
+    Route::get('/receipts/{id}', [StudentPortalController::class, 'receipt'])->whereNumber('id')->name('receipts.show');
+    Route::get('/receipts/{id}/pdf', [StudentPortalController::class, 'receiptPdf'])->whereNumber('id')->name('receipts.pdf');
 });
 
 Route::middleware(['auth:web,admin', 'staff-area'])->group(function () {
     Route::view('/profile', 'profile')->name('profile');
-    Route::view('/dashboard', 'dashboard')->name('dashboard');
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     // Tenants: dynamic (database-backed via TenantController). SaaS admin + anyone granted the module.
     Route::middleware('module:tenants')->group(function () {
@@ -200,6 +197,8 @@ Route::middleware(['auth:web,admin', 'staff-area'])->group(function () {
 
     // Enrollments: no standalone pages — enrolling/editing happens from the Students module (modal), gated by students.enroll. Tenant-scoped, never for the SaaS admin.
     Route::middleware('module:students')->group(function () {
+        Route::get('/receipts/{id}', [ReceiptController::class, 'show'])->whereNumber('id')->name('receipts.show');
+        Route::get('/receipts/{id}/pdf', [ReceiptController::class, 'pdf'])->whereNumber('id')->name('receipts.pdf');
         Route::middleware('module:students,enroll')->group(function () {
             Route::get('/enrollments/create', [EnrollmentController::class, 'create'])->name('enrollments.create');
             Route::post('/enrollments', [EnrollmentController::class, 'store'])->name('enrollments.store');

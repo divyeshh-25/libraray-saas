@@ -74,4 +74,25 @@ trait ScopesToViewer
             }
         });
     }
+
+    /**
+     * For money rows (FeeInvoice, FeeTransaction) that belong to a student.
+     * Archived students are included so historic revenue and receipts stay
+     * reachable after a student is archived.
+     */
+    private function scopeThroughStudentUser(Builder $query): Builder
+    {
+        $tenantId = $this->viewerTenantId();
+        $branchId = $this->viewerBranchId();
+
+        return $query->whereHas('student', function (Builder $student) use ($tenantId, $branchId) {
+            $student->withTrashed()->whereHas('user', function (Builder $q) use ($tenantId, $branchId) {
+                $q->where('tenant_id', $tenantId);
+
+                if ($branchId) {
+                    $q->where('branch_id', $branchId);
+                }
+            });
+        });
+    }
 }

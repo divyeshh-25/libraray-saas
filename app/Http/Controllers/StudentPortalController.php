@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FeeTransaction;
 use App\Models\Student;
 use App\Models\StudentAttendance;
+use App\Services\ReceiptRenderer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
@@ -42,7 +46,11 @@ class StudentPortalController extends Controller
             $avg = round(($presentAllTime / $daysSinceEnrollment) * 100);
         }
 
-        $invoices = $student->invoices()->latest('invoice_date')->take(10)->get();
+        $invoices = $student->invoices()->where('status', '!=', 'cancelled')->latest('invoice_date')->latest('id')->take(10)->get();
+        $payments = $student->transactions()->where('status', 'success')->with('invoice')->latest('transaction_date')->latest('id')->take(15)->get();
+        $billed = $student->invoices()->where('status', '!=', 'cancelled')->sum('final_amount');
+        $paid = $student->invoices()->where('status', '!=', 'cancelled')->sum('paid_amount');
+        $outstanding = $student->invoices()->outstanding()->sum('balance_amount');
 
         return view('student.dashboard', [
             'student' => $student,
@@ -54,6 +62,8 @@ class StudentPortalController extends Controller
             'consistency' => $consistency,
             'avg' => $avg,
             'invoices' => $invoices,
+            'payments' => $payments,
+            'feeSummary' => ['billed' => $billed, 'paid' => $paid, 'outstanding' => $outstanding],
         ]);
     }
 
@@ -73,7 +83,7 @@ class StudentPortalController extends Controller
         abort_if($attendance && $attendance->check_in, 422, 'You have already checked in today.');
 
         $now = now();
-        $shiftStart = \Illuminate\Support\Carbon::parse($enrollment->shift->start_time);
+        $shiftStart = Carbon::parse($enrollment->shift->start_time);
         $status = $now->format('H:i') > $shiftStart->addMinutes(15)->format('H:i') ? 'late' : 'present';
 
         StudentAttendance::updateOrCreate(
@@ -163,8 +173,26 @@ class StudentPortalController extends Controller
         return redirect()->route('student.profile.edit')->with('success', 'Password changed.');
     }
 
+    public function receipt(ReceiptRenderer $renderer, int $id): View
+    {
+        return $renderer->view($this->ownTransaction($id), route('student.receipts.pdf', $id));
+    }
+
+    public function receiptPdf(ReceiptRenderer $renderer, int $id): Response
+    {
+        return $renderer->download($this->ownTransaction($id));
+    }
+
+    /** A student can only ever open receipts for their own successful payments. */
+    private function ownTransaction(int $id): FeeTransaction
+    {
+        return FeeTransaction::where('student_id', $this->currentStudent()->id)
+            ->where('status', 'success')
+            ->findOrFail($id);
+    }
+
     private function currentStudent(): Student
     {
-        return Auth::user()->student()->with(['enrollments.branch', 'enrollments.shift', 'enrollments.feeStructure', 'enrollments.seatAllocation.seat', 'user'])->firstOrFail();
+        return Auth::user()->student()->with(['enrollments.branch', 'enrollments.shift', 'enrollments.feeStructure', 'enrollments.seatAllocation.seat', 'user.branch'])->firstOrFail();
     }
 }

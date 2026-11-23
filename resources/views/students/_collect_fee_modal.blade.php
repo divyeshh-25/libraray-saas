@@ -14,6 +14,18 @@
                 <input type="date" name="paid_on" class="input w-full mt-1" value="{{ now()->toDateString() }}" required>
             </label>
             <label class="block">
+                <span class="text-[12.5px] text-muted">Payment method</span>
+                <select name="payment_method" class="input w-full mt-1">
+                    @foreach (\App\Models\FeeTransaction::METHODS as $m)
+                        <option value="{{ $m }}">{{ ucwords(str_replace('_', ' ', $m)) }}</option>
+                    @endforeach
+                </select>
+            </label>
+            <label class="block">
+                <span class="text-[12.5px] text-muted">Reference no. (optional)</span>
+                <input type="text" name="reference_number" class="input w-full mt-1" maxlength="150" placeholder="UPI / cheque / bank reference">
+            </label>
+            <label class="block">
                 <span class="text-[12.5px] text-muted">Notes (optional)</span>
                 <input type="text" name="notes" class="input w-full mt-1" placeholder="e.g. Cash, UPI reference...">
             </label>
