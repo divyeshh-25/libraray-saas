@@ -5,14 +5,21 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Concerns\ScopesToViewer;
 use App\Models\Branch;
 use App\Models\FeeInvoice;
+use App\Models\FeeStructure;
+use App\Models\FeeTransaction;
 use App\Models\Student;
 use App\Models\User;
+use App\Services\FeeBilling;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class StudentController extends Controller
@@ -67,7 +74,7 @@ class StudentController extends Controller
     {
         $student = $this->scopeThroughUser(Student::withTrashed())->with(['user.branch', 'enrollments' => fn ($q) => $q->where('status', 'active')->with(['shift', 'feeStructure', 'seatAllocation.seat'])])->findOrFail($id);
         $attendances = $student->attendances()->latest('attendance_date')->take(28)->get();
-        $invoices = $student->invoices()->latest('invoice_date')->take(6)->get();
+        $invoices = $student->invoices()->with('transactions')->latest('invoice_date')->latest('id')->take(10)->get();
 
         return view('students.show', compact('student', 'attendances', 'invoices'));
     }
@@ -113,31 +120,72 @@ class StudentController extends Controller
         return response()->json(['message' => 'Student archived.']);
     }
 
-    public function collectFee(Request $request, int $id): JsonResponse
+    /**
+     * Take a payment from a student. It is applied to their oldest invoice
+     * with a balance (or a chosen invoice). With no outstanding invoice, a
+     * one-off invoice is raised for the amount and settled in full.
+     */
+    public function collectFee(Request $request, int $id, FeeBilling $billing): JsonResponse
     {
         $student = $this->scopeThroughUser(Student::query())->findOrFail($id);
 
         $data = $request->validate([
             'fee_structure_id' => ['nullable', 'integer'],
-            'amount' => ['required', 'numeric', 'min:0.01'],
+            'invoice_id' => ['nullable', 'integer'],
+            'amount' => ['required', 'numeric', 'min:0.01', 'max:9999999999'],
             'paid_on' => ['required', 'date'],
+            'payment_method' => ['nullable', 'string', Rule::in(FeeTransaction::METHODS)],
+            'reference_number' => ['nullable', 'string', 'max:150'],
             'notes' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $invoice = FeeInvoice::create([
-            'student_id' => $student->id,
-            'fee_structure_id' => $data['fee_structure_id'] ?? null,
-            'invoice_number' => 'INV-'.now()->format('ymd').'-'.str_pad((string) random_int(0, 9999), 4, '0', STR_PAD_LEFT),
-            'invoice_date' => $data['paid_on'],
-            'due_date' => $data['paid_on'],
-            'total_amount' => $data['amount'],
-            'discount_amount' => 0,
-            'final_amount' => $data['amount'],
-            'status' => 'paid',
-            'notes' => $data['notes'] ?? null,
-        ]);
+        $paidOn = Carbon::parse($data['paid_on']);
 
-        return response()->json(['message' => 'Fee collected.', 'invoice' => $invoice]);
+        $transaction = DB::transaction(function () use ($data, $student, $billing, $paidOn) {
+            $invoiceQuery = FeeInvoice::outstanding()->where('student_id', $student->id);
+
+            if (! empty($data['invoice_id'])) {
+                $invoice = $invoiceQuery->whereKey($data['invoice_id'])->first();
+                if (! $invoice) {
+                    throw ValidationException::withMessages(['invoice_id' => 'That invoice is not payable for this student.']);
+                }
+            } else {
+                $invoice = $invoiceQuery->orderBy('invoice_date')->orderBy('id')->first();
+            }
+
+            if (! $invoice) {
+                $feeStructureId = $data['fee_structure_id'] ?? null;
+                if ($feeStructureId && ! FeeStructure::whereKey($feeStructureId)
+                    ->whereHas('branch', fn ($q) => $q->where('tenant_id', $this->viewerTenantId()))->exists()) {
+                    throw ValidationException::withMessages(['fee_structure_id' => 'Invalid fee plan.']);
+                }
+
+                $invoice = $billing->createInvoice(
+                    student: $student,
+                    amount: number_format((float) $data['amount'], 2, '.', ''),
+                    invoiceDate: $paidOn,
+                    dueDate: $paidOn,
+                    feeStructureId: $feeStructureId,
+                    notes: $data['notes'] ?? null,
+                );
+            }
+
+            return $billing->recordPayment(
+                invoice: $invoice,
+                amount: $data['amount'],
+                method: $data['payment_method'] ?? 'cash',
+                paidAt: $paidOn->copy()->setTimeFrom(now()),
+                reference: $data['reference_number'] ?? null,
+                remarks: $data['notes'] ?? null,
+                receivedBy: Auth::id(),
+            );
+        });
+
+        return response()->json([
+            'message' => "Payment received. Receipt {$transaction->receipt_number} issued.",
+            'receipt_url' => route('receipts.show', $transaction->id),
+            'invoice' => $transaction->invoice,
+        ]);
     }
 
     public function enrollmentHistory(int $id): View
@@ -163,7 +211,7 @@ class StudentController extends Controller
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, string>
+     * @return Collection<int, string>
      */
     private function branchOptions()
     {

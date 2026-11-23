@@ -17,7 +17,8 @@
         <x-initials :name="$u->name" class="w-12 h-12 text-base" />
         <div>
             <div class="font-semibold">{{ $u->name }}</div>
-            <div class="text-[12.5px] text-muted">{{ $student->student_code }}</div>
+            <div class="text-[12.5px] text-muted">{{ $student->student_code }}@if ($u->branch) · {{ $u->branch->name }}@endif</div>
+            <div class="text-[12.5px] text-muted">{{ collect([$u->phone, $u->email])->filter()->implode(' · ') }}</div>
         </div>
     </div>
 </div>
@@ -94,21 +95,54 @@
 </div>
 
 {{-- Fees --}}
+<div class="grid grid-cols-3 gap-3">
+    <x-stat label="Billed" value="₹{{ number_format($feeSummary['billed']) }}" />
+    <x-stat label="Paid" value="₹{{ number_format($feeSummary['paid']) }}" />
+    <x-stat label="Outstanding" value="₹{{ number_format($feeSummary['outstanding']) }}" />
+</div>
+
 <div class="card">
-    <div class="card-head"><div class="card-title">Fee history</div><a href="{{ route('student.profile.edit') }}" class="text-[12.5px] text-brand-700 hover:underline">Edit profile</a></div>
+    <div class="card-head"><div class="card-title">Invoices</div><a href="{{ route('student.profile.edit') }}" class="text-[12.5px] text-brand-700 hover:underline">Edit profile</a></div>
     <div class="overflow-x-auto">
         <table class="tbl">
-            <thead><tr><th>Invoice</th><th>Date</th><th class="text-right">Amount</th><th>Status</th></tr></thead>
+            <thead><tr><th>Invoice</th><th>Date</th><th class="text-right">Payable</th><th class="text-right">Paid</th><th class="text-right">Balance</th><th>Status</th></tr></thead>
             <tbody>
                 @forelse ($invoices as $inv)
                     <tr>
                         <td class="font-medium">{{ $inv->invoice_number }}</td>
-                        <td class="text-muted">{{ $inv->invoice_date->format('d M Y') }}</td>
-                        <td class="text-right">₹{{ number_format($inv->final_amount) }}</td>
+                        <td class="text-muted whitespace-nowrap">{{ $inv->invoice_date->format('d M Y') }}</td>
+                        <td class="text-right">₹{{ number_format($inv->final_amount, 2) }}</td>
+                        <td class="text-right">₹{{ number_format($inv->paid_amount, 2) }}</td>
+                        <td class="text-right">₹{{ number_format($inv->balance_amount, 2) }}</td>
                         <td><x-badge :status="$inv->status" /></td>
                     </tr>
                 @empty
-                    <tr><td colspan="4" class="text-center text-muted py-6">No fee invoices yet.</td></tr>
+                    <tr><td colspan="6" class="text-center text-muted py-6">No fee invoices yet.</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-head"><div class="card-title">Payment history</div></div>
+    <div class="overflow-x-auto">
+        <table class="tbl">
+            <thead><tr><th>Receipt</th><th>Date</th><th>Method</th><th class="text-right">Amount</th><th></th></tr></thead>
+            <tbody>
+                @forelse ($payments as $p)
+                    <tr>
+                        <td class="font-medium">{{ $p->receipt_number }}<div class="text-[12px] text-muted font-normal">{{ $p->invoice->invoice_number }}</div></td>
+                        <td class="text-muted whitespace-nowrap">{{ $p->transaction_date->format('d M Y') }}</td>
+                        <td>{{ ucwords(str_replace('_', ' ', $p->payment_method)) }}</td>
+                        <td class="text-right">₹{{ number_format($p->amount, 2) }}</td>
+                        <td class="text-right whitespace-nowrap">
+                            <a href="{{ route('student.receipts.show', $p->id) }}" target="_blank" class="text-brand-700 hover:underline text-[12.5px]">View</a>
+                            · <a href="{{ route('student.receipts.pdf', $p->id) }}" class="text-brand-700 hover:underline text-[12.5px]">PDF</a>
+                        </td>
+                    </tr>
+                @empty
+                    <tr><td colspan="5" class="text-center text-muted py-6">No payments yet.</td></tr>
                 @endforelse
             </tbody>
         </table>

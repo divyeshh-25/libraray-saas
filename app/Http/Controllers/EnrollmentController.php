@@ -5,16 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Concerns\ScopesToViewer;
 use App\Models\Branch;
 use App\Models\FeeStructure;
+use App\Models\FeeTransaction;
 use App\Models\Seat;
 use App\Models\Shift;
 use App\Models\Student;
 use App\Models\StudentEnrollment;
 use App\Models\StudentSeatAllocation;
+use App\Services\FeeBilling;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class EnrollmentController extends Controller
@@ -32,11 +35,12 @@ class EnrollmentController extends Controller
         return view($request->ajax() ? 'enrollments._form' : 'enrollments.form', $data);
     }
 
-    public function store(Request $request): RedirectResponse|JsonResponse
+    public function store(Request $request, FeeBilling $billing): RedirectResponse|JsonResponse
     {
         $data = $this->validateData($request, null);
+        $receipt = null;
 
-        $enrollment = DB::transaction(function () use ($data) {
+        $enrollment = DB::transaction(function () use ($data, $billing, &$receipt) {
             $student = $this->resolveStudent($data['student_id']);
             $branch = $this->resolveBranch($data['branch_id']);
             $shift = $this->resolveShift($branch->id, $data['shift_id']);
@@ -50,7 +54,7 @@ class EnrollmentController extends Controller
 
             $seatAllocationId = $this->allocateSeatIfRequested($data, $student, $branch, $shift);
 
-            return StudentEnrollment::create([
+            $enrollment = StudentEnrollment::create([
                 'student_id' => $student->id,
                 'branch_id' => $branch->id,
                 'shift_id' => $shift->id,
@@ -61,13 +65,38 @@ class EnrollmentController extends Controller
                 'end_date' => $data['end_date'] ?? null,
                 'status' => 'active',
             ]);
+
+            // Enrollment -> invoice for the full fee plan amount, with an
+            // optional first (full or partial) payment taken at the desk.
+            $invoice = $billing->invoiceEnrollment($enrollment);
+
+            if (! empty($data['initial_payment'])) {
+                $receipt = $billing->recordPayment(
+                    invoice: $invoice,
+                    amount: $data['initial_payment'],
+                    method: $data['payment_method'],
+                    reference: $data['payment_reference'] ?? null,
+                    remarks: 'Payment at enrollment',
+                    receivedBy: Auth::id(),
+                );
+            }
+
+            return $enrollment;
         });
 
+        $message = $receipt
+            ? "Student enrolled. Receipt {$receipt->receipt_number} issued."
+            : 'Student enrolled. Invoice generated.';
+
         if ($request->wantsJson()) {
-            return response()->json(['message' => 'Student enrolled.', 'enrollment' => $enrollment]);
+            return response()->json([
+                'message' => $message,
+                'enrollment' => $enrollment,
+                'receipt_url' => $receipt ? route('receipts.show', $receipt->id) : null,
+            ]);
         }
 
-        return redirect()->route('students.index')->with('success', 'Student enrolled.');
+        return redirect()->route('students.index')->with('success', $message);
     }
 
     public function edit(Request $request, int $id): View
@@ -210,6 +239,9 @@ class EnrollmentController extends Controller
         if ($enrollment === null) {
             $rules['student_id'] = ['required', 'integer'];
             $rules['seat_id'] = ['nullable', 'integer'];
+            $rules['initial_payment'] = ['nullable', 'numeric', 'min:0.01', 'max:9999999999'];
+            $rules['payment_method'] = ['required_with:initial_payment', 'nullable', 'string', Rule::in(FeeTransaction::METHODS)];
+            $rules['payment_reference'] = ['nullable', 'string', 'max:150'];
             unset($rules['status']);
         }
 

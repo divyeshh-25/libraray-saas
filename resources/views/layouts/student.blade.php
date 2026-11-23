@@ -17,7 +17,7 @@
         </div>
         <div class="flex items-center gap-3">
             <a href="{{ route('student.profile.edit') }}" class="text-muted hover:text-brand-700" title="Edit profile"><x-icon name="users" class="w-5 h-5" /></a>
-            <form method="POST" action="{{ route('student.logout') }}">
+            <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button class="text-muted hover:text-red-600" title="Sign out"><x-icon name="login" class="w-5 h-5" /></button>
             </form>

@@ -73,16 +73,32 @@
         </div>
         <div class="card">
             <div class="card-head"><div class="card-title">Fee history</div></div>
+            <div class="overflow-x-auto">
             <table class="tbl">
-                <thead><tr><th>Invoice</th><th>Date</th><th class="text-right">Amount</th><th>Status</th></tr></thead>
+                <thead><tr><th>Invoice</th><th>Date</th><th class="text-right">Payable</th><th class="text-right">Paid</th><th class="text-right">Balance</th><th>Status</th><th>Receipts</th></tr></thead>
                 <tbody>
                     @forelse ($invoices as $inv)
-                        <tr><td class="font-medium">{{ $inv->invoice_number }}</td><td class="text-muted">{{ $inv->invoice_date->format('d M Y') }}</td><td class="text-right">₹{{ number_format($inv->final_amount) }}</td><td><x-badge :status="$inv->status" /></td></tr>
+                        <tr>
+                            <td class="font-medium">{{ $inv->invoice_number }}</td>
+                            <td class="text-muted">{{ $inv->invoice_date->format('d M Y') }}</td>
+                            <td class="text-right">₹{{ number_format($inv->final_amount, 2) }}</td>
+                            <td class="text-right">₹{{ number_format($inv->paid_amount, 2) }}</td>
+                            <td class="text-right">₹{{ number_format($inv->balance_amount, 2) }}</td>
+                            <td><x-badge :status="$inv->status" /></td>
+                            <td class="whitespace-nowrap">
+                                @forelse ($inv->transactions->where('status', 'success') as $t)
+                                    <a href="{{ route('receipts.show', $t->id) }}" target="_blank" class="text-brand-700 hover:underline text-[12.5px]" title="₹{{ number_format($t->amount, 2) }} · {{ $t->transaction_date->format('d M Y') }}">{{ $t->receipt_number }}</a>@if (! $loop->last), @endif
+                                @empty
+                                    <span class="text-muted">—</span>
+                                @endforelse
+                            </td>
+                        </tr>
                     @empty
-                        <tr><td colspan="4" class="text-center text-muted py-6">No fee invoices yet.</td></tr>
+                        <tr><td colspan="7" class="text-center text-muted py-6">No fee invoices yet.</td></tr>
                     @endforelse
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 </div>

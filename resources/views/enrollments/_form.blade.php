@@ -73,6 +73,25 @@
         <x-field label="Start date" name="start_date" type="date" :value="$e?->start_date?->format('Y-m-d') ?? now()->format('Y-m-d')" required />
         <x-field label="End date" name="end_date" type="date" :value="$e?->end_date?->format('Y-m-d') ?? ''" hint="Leave empty for an open-ended enrollment." />
 
+        @if ($mode === 'create')
+            <div class="pt-2 border-t border-line">
+                <div class="text-[13px] font-medium mb-1">Payment at enrollment</div>
+                <p class="hint mb-3">An invoice for the full fee plan amount is generated automatically. Enter an amount to take a full or partial payment now; the rest stays as outstanding balance.</p>
+                <div class="space-y-4">
+                    <x-field label="Amount received (₹)" name="initial_payment" type="number" hint="Leave empty to collect later." />
+                    <div>
+                        <label class="label" for="payment_method">Payment method</label>
+                        <select id="payment_method" name="payment_method" class="input">
+                            @foreach (\App\Models\FeeTransaction::METHODS as $m)
+                                <option value="{{ $m }}">{{ ucwords(str_replace('_', ' ', $m)) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <x-field label="Reference no." name="payment_reference" hint="UPI / cheque / bank reference (optional)." />
+                </div>
+            </div>
+        @endif
+
         @if ($mode === 'edit')
             <x-field label="Status" name="status" :options="['Active', 'Completed', 'Cancelled']" :value="$e ? ucfirst($e->status) : 'Active'" required />
         @endif

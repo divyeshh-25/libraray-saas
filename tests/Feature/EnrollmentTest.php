@@ -5,7 +5,9 @@ namespace Tests\Feature;
 use App\Models\Branch;
 use App\Models\FeeStructure;
 use App\Models\Hall;
+use App\Models\Seat;
 use App\Models\Shift;
+use App\Models\Staff;
 use App\Models\Student;
 use App\Models\StudentEnrollment;
 use App\Models\Tenant;
@@ -78,7 +80,7 @@ class EnrollmentTest extends TestCase
             'start_date' => now()->toDateString(),
         ]);
 
-        $response->assertRedirect(route('enrollments.index'));
+        $response->assertRedirect(route('students.index'));
         $this->assertDatabaseHas('student_enrollments', [
             'student_id' => $student->id,
             'branch_id' => $branch->id,
@@ -106,7 +108,7 @@ class EnrollmentTest extends TestCase
             'start_date' => now()->toDateString(),
         ];
 
-        $this->actingAs($owner, 'web')->post(route('enrollments.store'), $payload)->assertRedirect(route('enrollments.index'));
+        $this->actingAs($owner, 'web')->post(route('enrollments.store'), $payload)->assertRedirect(route('students.index'));
 
         $this->actingAs($owner, 'web')->post(route('enrollments.store'), $payload)->assertStatus(422);
 
@@ -129,7 +131,7 @@ class EnrollmentTest extends TestCase
                 ['type' => 'SEAT', 'name' => 'S1', 'x' => 10, 'y' => 10, 'w' => 46, 'h' => 46, 'rotation' => 0, 'detail' => ''],
             ],
         ])->assertOk();
-        $seat = \App\Models\Seat::where('seat_number', 'S1')->first();
+        $seat = Seat::where('seat_number', 'S1')->first();
 
         $this->actingAs($owner, 'web')->post(route('enrollments.store'), [
             'student_id' => $student->id,
@@ -139,7 +141,7 @@ class EnrollmentTest extends TestCase
             'seat_id' => $seat->id,
             'enrollment_date' => now()->toDateString(),
             'start_date' => now()->toDateString(),
-        ])->assertRedirect(route('enrollments.index'));
+        ])->assertRedirect(route('students.index'));
 
         $this->assertDatabaseHas('student_seat_allocations', [
             'student_id' => $student->id,
@@ -182,8 +184,8 @@ class EnrollmentTest extends TestCase
         $branch = $this->branch($tenant);
 
         $staffUser = User::factory()->create(['tenant_id' => $tenant->id, 'branch_id' => $branch->id, 'user_type' => 'staff']);
-        \App\Models\Staff::create(['user_id' => $staffUser->id, 'status' => 'active']);
+        Staff::create(['user_id' => $staffUser->id, 'status' => 'active']);
 
-        $this->actingAs($staffUser, 'web')->get(route('enrollments.index'))->assertForbidden();
+        $this->actingAs($staffUser, 'web')->get(route('enrollments.create'))->assertForbidden();
     }
 }

@@ -32,7 +32,10 @@ class LoginController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard'));
+        // One login for everyone: students land in their portal, the rest in the staff area.
+        $home = Auth::guard('web')->user()->user_type === 'student' ? route('student.dashboard') : route('dashboard');
+
+        return redirect()->intended($home);
     }
 
     public function logout(Request $request): RedirectResponse
