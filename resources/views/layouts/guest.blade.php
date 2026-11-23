@@ -4,6 +4,27 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title') · LibNextGen</title>
+    <meta name="description" content="@yield('meta_description', 'LibNextGen: library management software for study libraries and reading halls — admissions, floor planning, fees and attendance.')">
+    <meta name="robots" content="@yield('robots', 'index, follow')">
+    <link rel="canonical" href="https://libnextgen.alwaysdata.net{{ request()->getPathInfo() }}">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <meta name="theme-color" content="#3453c4">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_IN">
+    <meta property="og:site_name" content="LibNextGen">
+    <meta property="og:title" content="@yield('title') · LibNextGen">
+    <meta property="og:description" content="@yield('meta_description', 'LibNextGen: library management software for study libraries and reading halls — admissions, floor planning, fees and attendance.')">
+    <meta property="og:url" content="https://libnextgen.alwaysdata.net{{ request()->getPathInfo() }}">
+    <meta property="og:image" content="https://libnextgen.alwaysdata.net/images/marketing/og-image.png">
+    <meta property="og:image:secure_url" content="https://libnextgen.alwaysdata.net/images/marketing/og-image.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="LibNextGen — library management software">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@yield('title') · LibNextGen">
+    <meta name="twitter:description" content="@yield('meta_description', 'LibNextGen: library management software for study libraries and reading halls — admissions, floor planning, fees and attendance.')">
+    <meta name="twitter:image" content="https://libnextgen.alwaysdata.net/images/marketing/og-image.png">
     @fonts
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -11,7 +32,7 @@
 <div class="min-h-screen grid lg:grid-cols-[minmax(0,1fr)_480px]">
     <section class="hidden lg:flex flex-col justify-between bg-slate-900 text-white p-12 relative overflow-hidden bg-[radial-gradient(ellipse_at_bottom_left,#2b44a3_0%,transparent_60%)]">
         <div class="flex items-center gap-2.5">
-            <span class="w-8 h-8 rounded-md bg-brand-500 grid place-items-center font-semibold">W</span>
+            <span class="w-8 h-8 rounded-md bg-brand-500 text-white grid place-items-center"><x-brand-icon class="w-5 h-5" /></span>
             <span class="font-semibold text-[16px]">LibNextGen</span>
         </div>
         <div class="max-w-md">
@@ -29,7 +50,7 @@
     <section class="flex items-center justify-center p-6 sm:p-10 bg-white">
         <div class="w-full max-w-sm" style="animation: rise .5s cubic-bezier(.22,1,.36,1) backwards">
             <div class="lg:hidden flex items-center gap-2.5 mb-8">
-                <span class="w-8 h-8 rounded-md bg-brand-500 text-white grid place-items-center font-semibold">W</span>
+                <span class="w-8 h-8 rounded-md bg-brand-500 text-white grid place-items-center"><x-brand-icon class="w-5 h-5" /></span>
                 <span class="font-semibold text-[16px]">LibNextGen</span>
             </div>
             @yield('content')

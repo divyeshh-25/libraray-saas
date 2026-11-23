@@ -1,5 +1,6 @@
 @extends('layouts.guest')
 @section('title', 'Reset password')
+@section('robots', 'noindex, nofollow')
 @section('content')
 <h1 class="text-[22px] font-semibold tracking-tight">Set a new password</h1>
 <p class="text-muted mt-1">Choose a strong password you haven’t used before.</p>

@@ -14,6 +14,7 @@ use App\Http\Controllers\FloorPlanController;
 use App\Http\Controllers\GeneralSettingController;
 use App\Http\Controllers\HallController;
 use App\Http\Controllers\PlanController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SeatAllocationController;
@@ -21,12 +22,26 @@ use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StudentPortalController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TenantController;
+use App\Models\Plan;
 use Illuminate\Support\Facades\Route;
 
 // Phase 1: static UI only. Every other route still renders a view directly (no controllers, no data layer).
 // Route parameters (e.g. {id}) are passed straight into the view.
 
-Route::redirect('/', '/login');
+Route::get('/', function () {
+    $plans = Plan::query()
+        ->where('status', 'active')
+        ->where('billing_cycle', 'monthly')
+        ->withCount(['tenantPlans as tenants_count' => fn ($q) => $q->where('status', 'active')->whereHas('tenant')])
+        ->oldest()
+        ->take(3)
+        ->get();
+
+    $mostPopularId = $plans->where('tenants_count', '>', 0)->sortByDesc('tenants_count')->first()?->id
+        ?? $plans->get(1)?->id;
+
+    return view('landing', compact('plans', 'mostPopularId'));
+})->name('landing');
 
 // User auth (users table, guard: web)
 Route::middleware('guest:web')->group(function () {
@@ -65,7 +80,10 @@ Route::middleware(['auth:web', 'student-only'])->prefix('student')->name('studen
 });
 
 Route::middleware(['auth:web,admin', 'staff-area'])->group(function () {
-    Route::view('/profile', 'profile')->name('profile');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile/password', [ProfileController::class, 'editPassword'])->name('profile.password.edit');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     // Tenants: dynamic (database-backed via TenantController). SaaS admin + anyone granted the module.

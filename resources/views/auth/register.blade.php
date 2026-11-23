@@ -1,5 +1,6 @@
 @extends('layouts.guest')
 @section('title', 'Create account')
+@section('meta_description', 'Start your 14-day free trial of LibNextGen — library management software with admissions, floor planning, fee collection and attendance. No card required.')
 @section('content')
 <h1 class="text-[22px] font-semibold tracking-tight">Create your account</h1>
 <p class="text-muted mt-1">Start a 14-day free trial. No card required.</p>
